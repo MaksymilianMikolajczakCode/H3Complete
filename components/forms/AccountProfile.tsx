@@ -30,9 +30,9 @@ interface Props {
     id: string;
     objectId: string;
     username: string;
-    name: string;
-    bio: string;
     image: string;
+    discord?: string;
+    role: 'admin' | 'player';
   };
   btnTitle: string;
 }
@@ -48,9 +48,8 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     resolver: zodResolver(UserValidation),
     defaultValues: {
       profile_photo: user?.image ? user.image : "",
-      name: user?.name ? user.name : "",
+      discord: user?.discord ? user.discord : "",
       username: user?.username ? user.username : "",
-      bio: user?.bio ? user.bio : "",
     },
   });
 
@@ -67,11 +66,10 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     }
 
     await updateUser({
-      name: values.name,
       path: pathname,
       username: values.username,
       userId: user.id,
-      bio: values.bio,
+      discord: values.discord,
       image: values.profile_photo,
     });
 
@@ -151,7 +149,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
 
         <FormField
           control={form.control}
-          name='name'
+          name='username'
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
@@ -171,31 +169,11 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
 
         <FormField
           control={form.control}
-          name='username'
+          name='discord'
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Username
-              </FormLabel>
-              <FormControl>
-                <Input
-                  type='text'
-                  className='account-form_input no-focus'
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name='bio'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                Bio
+                Discord
               </FormLabel>
               <FormControl>
                 <Textarea
