@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 
 import { useUploadThing } from "@/lib/uploadthing";
 import { isBase64Image } from "@/lib/utils";
@@ -32,7 +31,7 @@ interface Props {
     username: string;
     image: string;
     discord?: string;
-    role: 'admin' | 'player';
+    // role: 'admin' | 'player';
   };
   btnTitle: string;
 }
@@ -50,6 +49,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
       profile_photo: user?.image ? user.image : "",
       discord: user?.discord ? user.discord : "",
       username: user?.username ? user.username : "",
+      // role: user?.role ? user.role : "admin",
     },
   });
 
@@ -64,13 +64,13 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
         values.profile_photo = imgRes[0].fileUrl;
       }
     }
-
     await updateUser({
       path: pathname,
       username: values.username,
       userId: user.id,
       discord: values.discord,
       image: values.profile_photo,
+      // role: values.role
     });
 
     if (pathname === "/profile/edit") {
@@ -153,7 +153,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Name
+                Username
               </FormLabel>
               <FormControl>
                 <Input
@@ -176,8 +176,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                 Discord
               </FormLabel>
               <FormControl>
-                <Textarea
-                  rows={10}
+                <Input
                   className='account-form_input no-focus'
                   {...field}
                 />
@@ -187,7 +186,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
           )}
         />
 
-        <Button type='submit' className='bg-primary-500'>
+        <Button type='submit'>
           {btnTitle}
         </Button>
       </form>

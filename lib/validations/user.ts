@@ -8,9 +8,9 @@ export const UserValidation = z.object({
     .max(30, { message: "Maximum 30 caracters." }),
    discord: z 
     .string().url().optional(),
-    role: z.enum(['admin', 'player'], {
-        errorMap: (issue, ctx) => {
-          return { message: 'Invalid role' };
-        },
-      }),
+    // role: z.enum(['admin', 'player'], {
+    //     errorMap: (issue, ctx) => {
+    //       return { message: 'Invalid role' };
+    //     },
+    //   }),
 });
