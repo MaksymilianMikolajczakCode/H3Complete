@@ -1,6 +1,8 @@
 import { url } from "inspector";
 import mongoose from "mongoose";
 
+const Schema = mongoose.Schema;
+
 const userSchema = new mongoose.Schema({
   id: {
     type: String,
@@ -24,6 +26,10 @@ const userSchema = new mongoose.Schema({
   discord: {
     type: String,
     required: false
+  },
+  competitions: {
+    type: Schema.Types.ObjectId,
+    ref: 'Competition'
   }
 });
 

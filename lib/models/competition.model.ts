@@ -31,11 +31,24 @@ const competitionSchema = new Schema({
     type: String,
     required: true,
   },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  regulations: {
+    type: String
+  },
+  regulationsLink: {
+    type: String
+  },
+  details: {
+    type: String
+  },
   title: {
     type: String,
     required: true
   },
-  users: [{
+  players: [{
     type: Schema.Types.ObjectId,
     ref: 'User'
   }],
@@ -47,7 +60,7 @@ const competitionSchema = new Schema({
     type: String,
     enum: ['Swiss', 'League', 'Bracket', 'Basket Bracket']
   },
-  phase: [subSchema],
+  // round: [subSchema],
 //   rounds: [subSchema2]
 });
 
