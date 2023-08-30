@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useOrganization } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
-
+import { cn } from "@/lib/utils"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 
@@ -41,7 +41,10 @@ function PostCompetition({ userId }: Props) {
   const form = useForm<z.infer<typeof CompetitionValidation>>({
     resolver: zodResolver(CompetitionValidation),
     defaultValues: {
-      title: ""
+      title: "",
+      details: "",
+      regulations: "",
+      regulationsLink: "",
     },
   });
 
@@ -56,7 +59,7 @@ function PostCompetition({ userId }: Props) {
       type: values.type,
       path: pathname,
     });
-
+    // console.log(title, owner, details, regulations, regulationsLink, startDate, type)
     router.push("/");
   };
 
@@ -75,7 +78,7 @@ function PostCompetition({ userId }: Props) {
                 Title
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input/>
+                <Input {...field}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -135,27 +138,34 @@ function PostCompetition({ userId }: Props) {
                 start date
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-              <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={
-            "w-[280px] justify-start text-left font-normal"
-          }
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-        <Calendar
-          mode="single"
-          selected={startDate}
-          onSelect={setStartDate}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
+                <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -170,12 +180,12 @@ function PostCompetition({ userId }: Props) {
                 type of competition
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Select>
-                <SelectTrigger className="w-[180px]">
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger className="w-[180px]" >
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Swiss">Swiss</SelectItem>
+                  <SelectContent >
+                    <SelectItem value="Swiss" >Swiss</SelectItem>
                     <SelectItem value="League">League</SelectItem>
                     <SelectItem value="Bracket">Bracket</SelectItem>
                     <SelectItem value="Basket Bracket">Basket Bracket</SelectItem>

@@ -27,10 +27,6 @@ const subSchema = new Schema({
 
 
 const competitionSchema = new Schema({
-  id: {
-    type: String,
-    required: true,
-  },
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'User'

@@ -5,6 +5,6 @@ export const CompetitionValidation = z.object({
   type: z.enum(['Swiss', 'League', 'Bracket', 'Basket Bracket']),
   details: z.string(),
   regulations: z.string(),
-  regulationsLink: z.string().url(),
+  regulationsLink: z.string(),
   startDate: z.date()
 });
