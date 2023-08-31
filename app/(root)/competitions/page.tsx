@@ -22,7 +22,6 @@ async function Competitions({
     searchParams.page ? +searchParams.page : 1,
     30
   );
-
   return (
     <>
       <h1 className='head-text text-left'>Competitions</h1>

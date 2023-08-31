@@ -16,12 +16,13 @@ interface Props {
   startDate: Date;
 }
 
-function ThreadCard({
+function CompetitionCard({
   id,
   title,
   owner,
   startDate,
 }: Props) {
+  console.log(id)
   return (
     <article
       className={"flex w-full flex-col rounded-xl"}
@@ -100,4 +101,4 @@ function ThreadCard({
   );
 }
 
-export default ThreadCard;
+export default CompetitionCard;

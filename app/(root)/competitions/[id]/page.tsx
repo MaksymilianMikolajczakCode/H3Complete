@@ -1,13 +1,12 @@
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 
-import CompetitionCard from "@/components/CompetitionCard";
+import Competition from "@/components/Competition";
 
 import { fetchUser } from "@/lib/actions/user.actions";
-import { fetchCompetitionById, JoinCompetition } from "@/lib/actions/competition.actions";
+import { fetchCompetitionById} from "@/lib/actions/competition.actions";
 import { Button } from "@/components/ui/button";
 
-export const revalidate = 0;
 
 async function page({ params }: { params: { id: string } }) {
   if (!params.id) return null;
@@ -19,23 +18,23 @@ async function page({ params }: { params: { id: string } }) {
   if (!userInfo?.onboarded) redirect("/onboarding");
 
   const competition = await fetchCompetitionById(params.id);
-
-  const handleJoin = await JoinCompetition({userId: competition.owner, competitionId: params.id});
-
+  console.log(competition)
   return (
     <section className='relative'>
       <div>
-        <CompetitionCard
-          id={competition._id}
-          currentUserId={user.id}
-          title={competition.title}
-          owner={competition.owner}
-          startDate={competition.startDate}
-        />
+        <Competition
+                id={competition._id}
+                currentUserId={userInfo._id}
+                title={competition.title}
+                owner={competition.owner}
+                startDate={competition.startDate}
+                players={competition.players}
+                details={competition.details}
+                regulations={competition.regulations}
+                regulationsLink={competition.regulationsLink}
+                type={competition.type}
+              />
       </div>
-      <Button onClick={(e) => handleJoin}>
-        Join
-      </Button>
     </section>
   );
 }

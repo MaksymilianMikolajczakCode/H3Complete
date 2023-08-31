@@ -1,4 +1,3 @@
-import { url } from "inspector";
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
@@ -30,7 +29,11 @@ const userSchema = new mongoose.Schema({
   competitions: {
     type: Schema.Types.ObjectId,
     ref: 'Competition'
-  }
+  },
+  admin: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Competition'
+  }],
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

@@ -54,7 +54,7 @@ interface Params {
   path: string,
 }
 
-export async function createCompetition({ title, owner, regulationsLink, regulations, details, startDate, type, path }: Params
+export async function createCompetition({ title, owner, regulationsLink, regulations, details, startDate, type, path}: Params
 ) {
   try {
     connectToDB();
@@ -65,17 +65,17 @@ export async function createCompetition({ title, owner, regulationsLink, regulat
       regulations,
       details,
       startDate,
-      type,
+      type
     });
 
     // Update User model
     await User.findByIdAndUpdate(owner, {
-      $push: { competitions: createdCompetition._id },
+      $push: { owner: createdCompetition._id },
     });
 
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error(`Failed to create thread: ${error.message}`);
+    throw new Error(`Failed to create competition: ${error.message}`);
   }
 }
 
@@ -83,7 +83,7 @@ export async function createCompetition({ title, owner, regulationsLink, regulat
 
 export async function JoinCompetition({userId, competitionId} : { userId : string, competitionId: string}) {
   connectToDB();
-
+  
   try {
     await Competition.findByIdAndUpdate(competitionId, { 
       $push: { players: userId}
@@ -174,14 +174,18 @@ export async function fetchCompetitionById(competitionId: string) {
   connectToDB();
 
   try {
-    const competition = await Competition.findById(competitionId)
+    const competitionQuery = Competition.findById(competitionId)
       .populate({
         path: "owner",
         model: User,
-        select: "_id id name image",
+        select: "image username discord id _id"
       }) // Populate the author field with _id and username
-      .exec();
-
+      .populate({
+        path: "players",
+        model: User,
+        select: "image username"
+      })
+    const competition = await competitionQuery.exec()
     return competition;
   } catch (err) {
     console.error("Error while fetching competition:", err);

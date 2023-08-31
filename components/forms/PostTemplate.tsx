@@ -21,46 +21,45 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { CompetitionValidation } from "@/lib/validations/competition";
-import { createCompetition } from "@/lib/actions/competition.actions";
+import { TemplateValidation } from "@/lib/validations/template";
+import { createTemplate } from "@/lib/actions/template.actions";
 import { Input } from "../ui/input";
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "../ui/select";
 import { Calendar } from "../ui/calendar";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-interface Props {
-  userId: string;
-}
-
-function PostCompetition({ userId }: Props) {
-  const [startDate, setStartDate] = useState<Date | undefined>(new Date())
+function PostTemplate() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const form = useForm<z.infer<typeof CompetitionValidation>>({
-    resolver: zodResolver(CompetitionValidation),
+  const form = useForm<z.infer<typeof TemplateValidation>>({
+    resolver: zodResolver(TemplateValidation),
     defaultValues: {
-      title: "",
-      details: "",
-      regulations: "",
-      regulationsLink: "",
+        title: "",
+        download: "",
+        description: "",
+        specification: "",
+        creator: "",
+        settings: "",
+        rules: "",
+        image: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof CompetitionValidation>) => {
-    await createCompetition({
-      title: values.title,
-      owner: userId,
-      details: values.details,
-      regulations: values.regulations,
-      regulationsLink: values.regulationsLink,
-      startDate: values.startDate,
-      type: values.type,
+  const onSubmit = async (values: z.infer<typeof TemplateValidation>) => {
+    await createTemplate({
+        title: values.title,
+        download: values.download,
+        description: values.description,
+        specification: values.specification,
+        creator: values.creator,
+        settings: values.settings,
+        rules: values.rules,
+        image: values.image,
       path: pathname
     });
-    // console.log(title, owner, details, regulations, regulationsLink, startDate, type)
-    router.push("/");
+   router.push("/");
   };
 
   return (
@@ -86,7 +85,7 @@ function PostCompetition({ userId }: Props) {
         />
         <FormField
           control={form.control}
-          name='details'
+          name='description'
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
@@ -101,7 +100,7 @@ function PostCompetition({ userId }: Props) {
         />
         <FormField
           control={form.control}
-          name='regulations'
+          name='settings'
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
@@ -116,14 +115,14 @@ function PostCompetition({ userId }: Props) {
         />
         <FormField
           control={form.control}
-          name='regulationsLink'
+          name='specification'
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
                 Link to regulations
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
+                <Textarea {...field}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -131,66 +130,14 @@ function PostCompetition({ userId }: Props) {
         />
         <FormField
           control={form.control}
-          name='startDate'
+          name='settings'
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                start date
+                Link to regulations
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='type'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                type of competition
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-[180px]" >
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                  <SelectContent >
-                    <SelectItem value="Swiss" >Swiss</SelectItem>
-                    <SelectItem value="League">League</SelectItem>
-                    <SelectItem value="Bracket">Bracket</SelectItem>
-                    <SelectItem value="Basket Bracket">Basket Bracket</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Textarea {...field}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -205,4 +152,4 @@ function PostCompetition({ userId }: Props) {
   );
 }
 
-export default PostCompetition;
+export default PostTemplate;
