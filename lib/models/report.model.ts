@@ -20,10 +20,6 @@ const subSchema = new Schema({
 
 
 const reportSchema = new Schema({
-  id: {
-    type: String,
-    required: true,
-  },
   title: {
     type: String,
     required: true

@@ -1,0 +1,31 @@
+
+import Template from "@/components/Template";
+
+import { fetchUser } from "@/lib/actions/user.actions";
+import { fetchTemplateById} from "@/lib/actions/template.actions";
+import { Button } from "@/components/ui/button";
+
+
+async function page({ params }: { params: { id: string } }) {
+  if (!params.id) return null;
+
+  const template = await fetchTemplateById(params.id);
+  return (
+    <section className='relative'>
+      <div>
+        <Template
+                title={template.title}
+                description={template.description}
+                download={template.download}
+                settings={template.settings}
+                rules={template.rules}
+                specification={template.specification}
+                trade={template.trade}
+                image={template.image}
+              />
+      </div>
+    </section>
+  );
+}
+
+export default page;

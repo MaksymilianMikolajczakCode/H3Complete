@@ -21,17 +21,43 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
+import { useUploadThing } from "@/lib/uploadthing";
+import { isBase64Image } from "@/lib/utils";
+
+
 import { TemplateValidation } from "@/lib/validations/template";
 import { createTemplate } from "@/lib/actions/template.actions";
 import { Input } from "../ui/input";
-import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "../ui/select";
-import { Calendar } from "../ui/calendar";
-import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { ChangeEvent, useState } from "react";
 
 function PostTemplate() {
   const router = useRouter();
   const pathname = usePathname();
+  const { startUpload } = useUploadThing("media");
+  const [files, setFiles] = useState<File[]>([]);
+  const handleImage = (
+    e: ChangeEvent<HTMLInputElement>,
+    fieldChange: (value: string) => void
+  ) => {
+    e.preventDefault();
+
+    const fileReader = new FileReader();
+
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setFiles(Array.from(e.target.files));
+
+      if (!file.type.includes("image")) return;
+
+      fileReader.onload = async (event) => {
+        const imageDataUrl = event.target?.result?.toString() || "";
+        fieldChange(imageDataUrl);
+      };
+
+      fileReader.readAsDataURL(file);
+    }
+  };
+
 
   const form = useForm<z.infer<typeof TemplateValidation>>({
     resolver: zodResolver(TemplateValidation),
@@ -40,23 +66,37 @@ function PostTemplate() {
         download: "",
         description: "",
         specification: "",
-        creator: "",
+        // creator: "",
         settings: "",
         rules: "",
         image: "",
+        trade: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof TemplateValidation>) => {
+
+    // const blob = values.profile_photo;
+
+    // const hasImageChanged = isBase64Image(blob);
+    // if (hasImageChanged) {
+    //   const imgRes = await startUpload(files);
+
+    //   if (imgRes && imgRes[0].fileUrl) {
+    //     values.profile_photo = imgRes[0].fileUrl;
+    //   }
+    // }
+
     await createTemplate({
         title: values.title,
         download: values.download,
         description: values.description,
         specification: values.specification,
-        creator: values.creator,
+        // creator: values.creator,
         settings: values.settings,
         rules: values.rules,
         image: values.image,
+        trade: values.trade,
       path: pathname
     });
    router.push("/");
@@ -68,6 +108,44 @@ function PostTemplate() {
         className='mt-10 flex flex-col justify-start gap-10'
         onSubmit={form.handleSubmit(onSubmit)}
       >
+                <FormField
+          control={form.control}
+          name='image'
+          render={({ field }) => (
+            <FormItem className='flex items-center gap-4'>
+              {/* <FormLabel className='account-form_image-label'>
+                {field.value ? (
+                  <Image
+                    src={field.value}
+                    alt='profile_icon'
+                    width={96}
+                    height={96}
+                    priority
+                    className='rounded-full object-contain'
+                  />
+                ) : (
+                  <Image
+                    src='/assets/profile.svg'
+                    alt='profile_icon'
+                    width={24}
+                    height={24}
+                    className='object-contain'
+                  />
+                )}
+              </FormLabel> */}
+              <FormControl className='flex-1 text-base-semibold text-gray-200'>
+                <Input
+                  type='file'
+                  accept='image/*'
+                  placeholder='Add profile photo'
+                  className='account-form_image-input'
+                  onChange={(e) => handleImage(e, field.onChange)}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name='title'
@@ -89,25 +167,10 @@ function PostTemplate() {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Details
+                Description
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Textarea rows={10} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='settings'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                regulations
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Textarea rows={10} {...field} />
+                <Input {...field}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -119,10 +182,25 @@ function PostTemplate() {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Link to regulations
+                specification
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Textarea {...field}/>
+                <Input {...field}/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='rules'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+                rules
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+                <Input {...field}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -134,16 +212,45 @@ function PostTemplate() {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Link to regulations
+                settings
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Textarea {...field}/>
+                <Input {...field}/>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
+        <FormField
+          control={form.control}
+          name='download'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+                download
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+                <Input {...field}/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='trade'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+                Trade
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+                <Input {...field}/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type='submit' className='bg-primary-500'>
           Post Competition
         </Button>

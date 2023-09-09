@@ -18,7 +18,6 @@ async function page({ params }: { params: { id: string } }) {
   if (!userInfo?.onboarded) redirect("/onboarding");
 
   const competition = await fetchCompetitionById(params.id);
-  console.log(competition)
   return (
     <section className='relative'>
       <div>

@@ -1,4 +1,3 @@
-
 import { Button } from "./ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,37 +7,25 @@ import ClientButton from "./ClientButton";
 // import DeleteThread from "../forms/DeleteThread";
 
 interface Props {
-  id: string;
-  currentUserId: string;
-  title: string;
-  players: [{
-    _id: string,
+    title: string,
     image: string,
-    username: string
-  }];
-  regulations: string,
-  regulationsLink: string,
-  details: string,
-  type: string
-  owner: {
-    id: string
-    username: string;
-    image: string;
-  };
-  startDate: Date;
-}
-
-function Competition({
-  id,
+    description: string,
+    rules: String,
+    settings: String,
+    specification: string,
+    // creator: String | undefined,
+    trade: string,
+    download: string | undefined,
+  }
+function Template({
   title,
-  owner,
-  currentUserId,
-  startDate,
-  players,
-  regulations,
-  regulationsLink,
-  details,
-  type,
+  image,
+  description,
+  rules,
+  settings,
+  specification,
+  trade,
+  download,
 }: Props) {
   return (
     <article
@@ -46,18 +33,11 @@ function Competition({
     >
       <div>
         <h1>{title}</h1>
-        {details}
-        {regulations}
-        {regulationsLink}
-        //             {players.map((player) => (
-               <div>
-                {player.username}
-                 {player.image}
-                </div>
-             ))}
-        <ClientButton currentUserId={currentUserId} competitionId={id}/>
+        {description}
+        {rules}
+        {settings}
       </div>
-      <div className='flex items-start justify-between'>
+      {/* <div className='flex items-start justify-between'>
         <div className='flex w-full flex-1 flex-row gap-4'>
           <div className='flex flex-col items-center'>
             <Link href={`/profile/${owner.id}`} className='relative h-11 w-11'>
@@ -83,17 +63,9 @@ function Competition({
             </Link>
           </div>
         </div>
-        
-        {/* <DeleteThread
-          threadId={JSON.stringify(id)}
-          currentUserId={currentUserId}
-          authorId={author.id}
-          parentId={parentId}
-          isComment={isComment}
-        /> */}
-      </div>
+      </div> */}
     </article>
   );
 }
 
-export default Competition;
+export default Template;

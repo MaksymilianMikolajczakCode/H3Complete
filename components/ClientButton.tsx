@@ -1,8 +1,9 @@
 'use client'
 
 import React from 'react'
-import { JoinCompetition } from "@/lib/actions/competition.actions";
+import { JoinCompetition, generateBracket } from "@/lib/actions/competition.actions";
 import { Button } from './ui/button';
+
 
 interface Props {
     currentUserId: string,
@@ -10,11 +11,15 @@ interface Props {
 }
 
 const ClientButton = ({currentUserId, competitionId}: Props) => {
-    console.log(currentUserId)
   return (
+    <div>
     <Button onClick={(e) => JoinCompetition({userId: currentUserId, competitionId})}>
                  Join
     </Button>
+    <Button onClick={(e) => generateBracket(competitionId)}>
+      generate bracket
+    </Button>
+    </div>
   )
 }
 

@@ -6,6 +6,7 @@ import { connectToDB } from "../mongoose";
 
 import User from "../models/user.model";
 import Competition from "../models/competition.model";
+import Match from "../models/match.model";
 
 export async function fetchCompetitions(pageNumber = 1, pageSize = 20) {
   connectToDB();
@@ -231,3 +232,105 @@ export async function fetchCompetitionById(competitionId: string) {
 //     throw new Error("Unable to add comment");
 //   }
 // }
+
+
+
+
+export async function generateBracket(competitionId: string) {
+  connectToDB();
+
+  try {
+    const competitionQuery = Competition.findById(competitionId)
+      .populate({
+        path: "players",
+        model: User,
+        select: "image username"
+      })
+      const competition = await competitionQuery.exec()
+      const shuffledPlayers = competition.players.shuffle()
+      const  knownBrackets = [2,4,8,16,32,64,128,256,512,1024]
+      const base = knownBrackets.find(function( base: number) { return base >= competition.players.length})
+      const empty = base - competition.players.value
+      if(empty>0)
+      // for (let i = 0; i < competition.players.length; i += 2) {
+      //   const teamA = shuffledPlayers[i];
+      //   const teamB = shuffledPlayers[i + 1];
+      //   const match = await Match.create({
+      //     players: [teamA, teamB]
+      //   })
+      //   await Competition.findByIdAndUpdate(competitionId, {
+      //     $push: { bracket: match },
+      //   });
+      // }
+      var brackets 	= [],
+        round 		= 1,
+        baseT 		= base/2,
+        baseC 		= base/2,
+        teamMark	= 0,
+        nextInc		= base/2;
+
+      for(let i=1;i<=(base-1);i++) {
+        var	baseR = i/baseT,
+          isBye = false;
+
+        if(byes>0 && (i%2!=0 || byes>=(baseT-i))) {
+          isBye = true;
+          byes--;
+        }
+  } catch (err) {
+    console.error("Error while fetching competition:", err);
+    throw new Error("Unable to fetch competition");
+  }
+}
+
+
+
+// chatGPT suggestion 
+// class Match {
+//   constructor(teamA, teamB) {
+//     this.teamA = teamA;
+//     this.teamB = teamB;
+//     this.winner = null;
+//   }
+  
+//   setWinner(winner) {
+//     this.winner = winner;
+//   }
+// }
+
+// class Bracket {
+//   constructor(teams) {
+//     this.matches = [];
+//     this.initializeBracket(teams);
+//   }
+  
+//   initializeBracket(teams) {
+//     for (let i = 0; i < teams.length; i += 2) {
+//       const teamA = teams[i];
+//       const teamB = teams[i + 1];
+//       const match = new Match(teamA, teamB);
+//       this.matches.push(match);
+//     }
+//   }
+  
+//   getWinners() {
+//     return this.matches.map(match => match.winner);
+//   }
+// }
+
+// function generateBracket(teams) {
+//   const bracket = new Bracket(teams);
+//   const winners = bracket.getWinners();
+  
+//   while (winners.length > 1) {
+//     const nextBracket = new Bracket(winners);
+//     winners = nextBracket.getWinners();
+//   }
+  
+//   return winners[0];
+// }
+
+// const teams = ['Team 1', 'Team 2', 'Team 3', 'Team 4', 'Team 5', 'Team 6', 'Team 7', 'Team 8'];
+// const winner = generateBracket(teams);
+
+// console.log('Tournament Winner:', winner);
