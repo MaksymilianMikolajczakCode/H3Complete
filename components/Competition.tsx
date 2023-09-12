@@ -4,7 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { formatDateString } from "@/lib/utils";
-import ClientButton from "./ClientButton";
+import {ClientButton} from "./ClientButton";
+import Match from "./Match";
+import Bracket from "./Bracket";
 // import DeleteThread from "../forms/DeleteThread";
 
 interface Props {
@@ -26,6 +28,16 @@ interface Props {
     image: string;
   };
   startDate: Date;
+  bracket: [{
+    id:string;
+    players: [{
+      _id: string,
+      image: string,
+      username: string
+    }];
+    matchNumber: number;
+    roundNumber: number;
+  }]
 }
 
 function Competition({
@@ -39,6 +51,7 @@ function Competition({
   regulationsLink,
   details,
   type,
+  bracket,
 }: Props) {
   return (
     <article
@@ -49,12 +62,28 @@ function Competition({
         {details}
         {regulations}
         {regulationsLink}
-        //             {players.map((player) => (
+        {players.map((player) => (
                <div>
                 {player.username}
                  {player.image}
                 </div>
              ))}
+
+             <Bracket  bracket={bracket}/>
+             {/* {bracket.map((match) => 
+              <Match 
+                 key={match.id}
+                 id={match.id}
+                 players={match.players}
+                 matchNumber={match.matchNumber} 
+                 roundNumber={match.roundNumber}              
+                />
+             )} */}
+            {/* <Match  
+              id={}
+              players={}
+              matchNumber={}
+            /> */}
         <ClientButton currentUserId={currentUserId} competitionId={id}/>
       </div>
       <div className='flex items-start justify-between'>

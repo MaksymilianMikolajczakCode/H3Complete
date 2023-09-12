@@ -186,6 +186,15 @@ export async function fetchCompetitionById(competitionId: string) {
         model: User,
         select: "image username"
       })
+      .populate({
+        path: "bracket",
+        model: Match,
+        populate : {
+          path: "players",
+          model: User,
+          select: "_id username"
+        }
+      })
     const competition = await competitionQuery.exec()
     return competition;
   } catch (err) {
@@ -247,39 +256,53 @@ export async function generateBracket(competitionId: string) {
         select: "image username"
       })
       const competition = await competitionQuery.exec()
-      const shuffledPlayers = competition.players.shuffle()
+      const shuffle = (array: string[]) => { 
+        for (let i = array.length - 1; i > 0; i--) { 
+          const j = Math.floor(Math.random() * (i + 1)); 
+          [array[i], array[j]] = [array[j], array[i]]; 
+        } 
+        return array; 
+      }; 
+      const shuffledPlayers = shuffle(competition.players)
       const  knownBrackets = [2,4,8,16,32,64,128,256,512,1024]
       const base = knownBrackets.find(function( base: number) { return base >= competition.players.length})
-      const empty = base - competition.players.value
-      if(empty>0)
-      // for (let i = 0; i < competition.players.length; i += 2) {
-      //   const teamA = shuffledPlayers[i];
-      //   const teamB = shuffledPlayers[i + 1];
-      //   const match = await Match.create({
-      //     players: [teamA, teamB]
-      //   })
-      //   await Competition.findByIdAndUpdate(competitionId, {
-      //     $push: { bracket: match },
-      //   });
-      // }
-      var brackets 	= [],
-        round 		= 1,
-        baseT 		= base/2,
-        baseC 		= base/2,
-        teamMark	= 0,
-        nextInc		= base/2;
 
-      for(let i=1;i<=(base-1);i++) {
-        var	baseR = i/baseT,
-          isBye = false;
+      const rounds = Math.log(base)/Math.log(2)
+      // const empty = base - competition.players.value
 
-        if(byes>0 && (i%2!=0 || byes>=(baseT-i))) {
-          isBye = true;
-          byes--;
+
+      // if(empty>0)
+      for (let i = 0; i < competition.players.length; i += 2) {
+        const teamA = shuffledPlayers[i];
+        const teamB = shuffledPlayers[i + 1];
+        const matchNumber = (i + 2)/2
+        const match = await Match.create({
+          players: [teamA, teamB],
+          matchNumber: matchNumber,
+          roundNumber: 1,
+        })
+        await Competition.findByIdAndUpdate(competitionId, {
+          $push: { bracket: match },
+        });
+      }
+
+      for (let i = 2; i <= rounds; i+=1 ) {
+        for (let j = 1; j<= base/(2*i); j+=1) { 
+          const previousGames = (base*(1-Math.pow(0.5,(i-1))))
+          console.log(previousGames)
+          const matchNumber = previousGames + j
+          const match = await Match.create({
+            matchNumber: matchNumber,
+            roundNumber: i
+          })
+          await Competition.findByIdAndUpdate(competitionId, {
+            $push: { bracket: match },
+          });
         }
+      }
   } catch (err) {
-    console.error("Error while fetching competition:", err);
-    throw new Error("Unable to fetch competition");
+    console.error("Error while generating competition:", err);
+    throw new Error("Unable to generate competition");
   }
 }
 
@@ -334,3 +357,22 @@ export async function generateBracket(competitionId: string) {
 // const winner = generateBracket(teams);
 
 // console.log('Tournament Winner:', winner);
+
+export async function fetchMatch(matchId: string) {
+  connectToDB();
+
+  try {
+    const matchQuery = Match.findById(matchId)
+    .populate({
+      path: "players",
+      model: User,
+      select: "username _id"
+    }) 
+
+    const match = await matchQuery.exec()
+    return match;
+  } catch (err) {
+    console.error("Error while fetching match:", err);
+    throw new Error("Unable to fetch match");
+  }
+}

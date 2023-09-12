@@ -14,6 +14,9 @@ const matchSchema = new mongoose.Schema({
       },
       matchNumber: {
         type: Number
+      },
+      roundNumber: {
+        type: Number
       }
 });
 

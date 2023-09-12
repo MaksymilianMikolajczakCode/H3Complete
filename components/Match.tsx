@@ -1,11 +1,25 @@
 import React from 'react';
-import Team from './Team';
 
-const Match = ({ teamA, teamB }) => {
+interface Props {
+    id:string;
+    players: [{
+      _id: string,
+      image: string,
+      username: string
+    }];
+    matchNumber: number;
+    roundNumber: number;
+
+}
+
+
+const Match = ({ id, players, matchNumber }: Props) => {
   return (
     <div>
-      <Team name={teamA} />
-      <Team name={teamB} />
+      {players.map((player) => 
+        <div>{player.username}</div>
+      )}
+      {matchNumber}
     </div>
   );
 };

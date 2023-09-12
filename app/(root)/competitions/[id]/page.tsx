@@ -32,6 +32,7 @@ async function page({ params }: { params: { id: string } }) {
                 regulations={competition.regulations}
                 regulationsLink={competition.regulationsLink}
                 type={competition.type}
+                bracket={competition.bracket}
               />
       </div>
     </section>

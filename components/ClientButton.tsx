@@ -10,7 +10,7 @@ interface Props {
     competitionId: string
 }
 
-const ClientButton = ({currentUserId, competitionId}: Props) => {
+export const ClientButton = ({currentUserId, competitionId}: Props) => {
   return (
     <div>
     <Button onClick={(e) => JoinCompetition({userId: currentUserId, competitionId})}>
@@ -23,4 +23,15 @@ const ClientButton = ({currentUserId, competitionId}: Props) => {
   )
 }
 
-export default ClientButton
+export const matchButton = ({currentUserId, competitionId}: Props) => {
+  return (
+    <div>
+    <Button onClick={(e) => JoinCompetition({userId: currentUserId, competitionId})}>
+                 Join
+    </Button>
+    <Button onClick={(e) => generateBracket(competitionId)}>
+      generate bracket
+    </Button>
+    </div>
+  )
+}
