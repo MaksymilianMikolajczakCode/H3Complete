@@ -280,6 +280,8 @@ export async function generateBracket(competitionId: string) {
           players: [teamA, teamB],
           matchNumber: matchNumber,
           roundNumber: 1,
+          competition: competitionId,
+          NoR1Games: base/2
         })
         await Competition.findByIdAndUpdate(competitionId, {
           $push: { bracket: match },
@@ -293,7 +295,9 @@ export async function generateBracket(competitionId: string) {
           const matchNumber = previousGames + j
           const match = await Match.create({
             matchNumber: matchNumber,
-            roundNumber: i
+            roundNumber: i,
+            competition: competitionId,
+            NoR1Games: base/2
           })
           await Competition.findByIdAndUpdate(competitionId, {
             $push: { bracket: match },
@@ -371,6 +375,62 @@ export async function fetchMatch(matchId: string) {
 
     const match = await matchQuery.exec()
     return match;
+  } catch (err) {
+    console.error("Error while fetching match:", err);
+    throw new Error("Unable to fetch match");
+  }
+}
+
+interface Params2 {
+  matchId: string,
+  winner: string,
+  loser: string,
+  winnerCastle: String,
+  loserCastle: String,
+  winnerTrade: Number,
+  loserTrade: Number,
+  path: string,
+  competition: string,
+  matchNumber: number,
+  NoR1Games: number,
+}
+
+export async function updateMatch({ matchId, winner, loser, winnerCastle, winnerTrade, loserCastle, loserTrade, competition, matchNumber, NoR1Games, path}: Params2) {
+  connectToDB();
+  console.log(matchId)
+  try {
+     if (matchNumber % 2 === 0) { const nextMatch = await Match.findOneAndUpdate({competition: competition, matchNumber: (matchNumber/2) + NoR1Games},{ $push: { players: winner}}) 
+    nextMatch.players.push(winner)
+    console.log(nextMatch)
+    console.log(winner)
+    console.log(matchNumber + NoR1Games)
+    await Match.findOneAndUpdate({_id: matchId},{
+      winner: winner,
+      competition: competition,
+      games: {
+        winner: winner,
+        loser: loser,
+        winnerTrade: winnerTrade,
+        winnerCastle: winnerCastle,
+        loserTrade: loserTrade,
+        loserCastle: loserCastle,
+      }
+     })
+    }
+     else { const nextMatch = await Match.findOneAndUpdate({competition: competition, matchNumber: ((matchNumber + 1)/2) + NoR1Games },{ $push: { players: winner}}) 
+     await Match.findOneAndUpdate({id: matchId},{
+      winner: winner,
+      competition: competition,
+      games: {
+        winner: winner,
+        loser: loser,
+        winnerTrade: winnerTrade,
+        winnerCastle: winnerCastle,
+        loserTrade: loserTrade,
+        loserCastle: loserCastle,
+      }
+     })}
+     
   } catch (err) {
     console.error("Error while fetching match:", err);
     throw new Error("Unable to fetch match");

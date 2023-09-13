@@ -21,41 +21,59 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 import { CompetitionValidation } from "@/lib/validations/competition";
-import { createCompetition } from "@/lib/actions/competition.actions";
+import { createCompetition, updateMatch } from "@/lib/actions/competition.actions";
 import { Input } from "../ui/input";
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "../ui/select";
 import { Calendar } from "../ui/calendar";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { MatchValidation } from "@/lib/validations/match";
 
 interface Props {
-  userId: string;
+  matchData: {
+    matchId:string;
+    player1id: string;
+    player1username: string;
+    player2id: string;
+    player2username: string;
+    matchNumber: number;
+    competition: string;
+    NoR1Games: number;
+  }
 }
 
-function PostCompetition({ userId }: Props) {
-  const [startDate, setStartDate] = useState<Date | undefined>(new Date())
+function PostCompetition({ matchData }: Props) {
+  console.log(matchData.matchId)
   const router = useRouter();
   const pathname = usePathname();
-
-  const form = useForm<z.infer<typeof CompetitionValidation>>({
-    resolver: zodResolver(CompetitionValidation),
+  const form = useForm<z.infer<typeof MatchValidation>>({
+    resolver: zodResolver(MatchValidation),
     defaultValues: {
-      title: "",
-      details: "",
-      regulations: "",
-      regulationsLink: "",
+      winner: "",
+      loser: "",
+      winnerTrade: 0,
+      winnerCastle: "Castle",
+      loserTrade: 0,
+      loserCastle: "Castle",
+      matchNumber: matchData.matchNumber,
+      competition: matchData.competition,
+      NoR1Games: matchData.NoR1Games,
+      matchId: matchData.matchId,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof CompetitionValidation>) => {
-    await createCompetition({
-      title: values.title,
-      owner: userId,
-      details: values.details,
-      regulations: values.regulations,
-      regulationsLink: values.regulationsLink,
-      startDate: values.startDate,
-      type: values.type,
+  const onSubmit = async (values: z.infer<typeof MatchValidation>) => {
+    await updateMatch({
+      winner: values.winner,
+      loser: values.loser,
+      winnerTrade: values.winnerTrade,
+      winnerCastle: values.winnerCastle,
+      loserTrade: values.loserTrade,
+      loserCastle: values.loserCastle,
+      matchNumber: values.matchNumber,
+      competition: values.competition,
+      NoR1Games: values.NoR1Games,
+      matchId: values.matchId,
       path: pathname
     });
     // console.log(title, owner, details, regulations, regulationsLink, startDate, type)
@@ -70,113 +88,11 @@ function PostCompetition({ userId }: Props) {
       >
         <FormField
           control={form.control}
-          name='title'
+          name='winner'
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Title
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='details'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                Details
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Textarea rows={10} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='regulations'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                regulations
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Textarea rows={10} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='regulationsLink'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                Link to regulations
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='startDate'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                start date
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='type'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                type of competition
+                won
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -184,10 +100,123 @@ function PostCompetition({ userId }: Props) {
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                   <SelectContent >
-                    <SelectItem value="Swiss" >Swiss</SelectItem>
-                    <SelectItem value="League">League</SelectItem>
-                    <SelectItem value="Bracket">Bracket</SelectItem>
-                    <SelectItem value="Basket Bracket">Basket Bracket</SelectItem>
+                    <SelectItem value={matchData.player1id} >{matchData.player1username}</SelectItem>
+                    <SelectItem value={matchData.player2id} >{matchData.player2username}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='winnerTrade'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+                winner trade
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+                <Input {...field} type="number"/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='loser'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+                defeated
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger className="w-[180px]" >
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                  <SelectContent >
+                    <SelectItem value={matchData.player1id} >{matchData.player1username}</SelectItem>
+                    <SelectItem value={matchData.player2id} >{matchData.player2username}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='loserTrade'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+                loser trade
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+                <Input {...field} type="number"/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='winnerCastle'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+                winner castle
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger className="w-[180px]" >
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                  <SelectContent >
+                    <SelectItem value="Castle" >Castle</SelectItem>
+                    <SelectItem value="Conflux">Conflux</SelectItem>
+                    <SelectItem value="Cove">Cove</SelectItem>
+                    <SelectItem value="Dungeon" >Dungeon</SelectItem>
+                    <SelectItem value="Fortress" >Fortress</SelectItem>
+                    <SelectItem value="Inferno">Inferno</SelectItem>
+                    <SelectItem value="Necropolis" >Necropolis</SelectItem>
+                    <SelectItem value="Rampart" >Rampart</SelectItem>
+                    <SelectItem value="Stronghold" >Stronghold</SelectItem>
+                    <SelectItem value="Tower" >Tower</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+                <FormField
+          control={form.control}
+          name='loserCastle'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+                loser castle
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger className="w-[180px]" >
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                  <SelectContent >
+                    <SelectItem value="Castle" >Castle</SelectItem>
+                    <SelectItem value="Conflux">Conflux</SelectItem>
+                    <SelectItem value="Cove">Cove</SelectItem>
+                    <SelectItem value="Dungeon" >Dungeon</SelectItem>
+                    <SelectItem value="Fortress" >Fortress</SelectItem>
+                    <SelectItem value="Inferno">Inferno</SelectItem>
+                    <SelectItem value="Necropolis" >Necropolis</SelectItem>
+                    <SelectItem value="Rampart" >Rampart</SelectItem>
+                    <SelectItem value="Stronghold" >Stronghold</SelectItem>
+                    <SelectItem value="Tower" >Tower</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -197,7 +226,7 @@ function PostCompetition({ userId }: Props) {
         />
 
         <Button type='submit' className='bg-primary-500'>
-          Post Competition
+          add game
         </Button>
       </form>
     </Form>
