@@ -371,7 +371,12 @@ export async function fetchMatch(matchId: string) {
       path: "players",
       model: User,
       select: "username _id"
-    }) 
+    })
+    .populate({
+      path: "competition",
+      model: Competition,
+      select: "owner"
+    })
 
     const match = await matchQuery.exec()
     return match;

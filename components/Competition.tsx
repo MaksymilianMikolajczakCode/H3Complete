@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { formatDateString } from "@/lib/utils";
-import {ClientButton} from "./ClientButton";
+import {ClientButton, JoinButton} from "./ClientButton";
 import Match from "./Match";
 import Bracket from "./Bracket";
 // import DeleteThread from "../forms/DeleteThread";
@@ -23,7 +23,7 @@ interface Props {
   details: string,
   type: string
   owner: {
-    id: string
+    _id: string
     username: string;
     image: string;
   };
@@ -53,6 +53,10 @@ function Competition({
   type,
   bracket,
 }: Props) {
+  const arrayOfIds = players.map(obj => obj._id.toString());
+  const alreadyRegistered = arrayOfIds.includes(currentUserId.toString())
+  const canGenerate = owner._id.toString() == currentUserId.toString()
+  console.log(canGenerate)
   return (
     <article
       className={"flex w-full flex-col rounded-xl"}
@@ -68,8 +72,10 @@ function Competition({
                  {player.image}
                 </div>
              ))}
-
-             <Bracket  bracket={bracket}/>
+            {bracket[0] ? <Bracket  bracket={bracket}/> : <div>
+            {canGenerate? <ClientButton currentUserId={currentUserId} competitionId={id}/>: <div></div>}
+            {alreadyRegistered? <div></div> : <JoinButton currentUserId={currentUserId} competitionId={id}/>}
+            </div> }
              {/* {bracket.map((match) => 
               <Match 
                  key={match.id}
@@ -84,7 +90,6 @@ function Competition({
               players={}
               matchNumber={}
             /> */}
-        <ClientButton currentUserId={currentUserId} competitionId={id}/>
       </div>
       <div className='flex items-start justify-between'>
         <div className='flex w-full flex-1 flex-row gap-4'>

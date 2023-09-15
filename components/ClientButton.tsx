@@ -10,12 +10,9 @@ interface Props {
     competitionId: string
 }
 
-export const ClientButton = ({currentUserId, competitionId}: Props) => {
+export const ClientButton = ({competitionId}: Props) => {
   return (
     <div>
-    <Button onClick={(e) => JoinCompetition({userId: currentUserId, competitionId})}>
-                 Join
-    </Button>
     <Button onClick={(e) => generateBracket(competitionId)}>
       generate bracket
     </Button>
@@ -23,15 +20,22 @@ export const ClientButton = ({currentUserId, competitionId}: Props) => {
   )
 }
 
-export const matchButton = ({currentUserId, competitionId}: Props) => {
+export const JoinButton = ({currentUserId, competitionId}: Props) => {
   return (
     <div>
-    <Button onClick={(e) => JoinCompetition({userId: currentUserId, competitionId})}>
+      <Button onClick={(e) => JoinCompetition({userId: currentUserId, competitionId})}>
                  Join
-    </Button>
-    <Button onClick={(e) => generateBracket(competitionId)}>
-      generate bracket
     </Button>
     </div>
   )
 }
+
+// export const addAdmin = ({currentUserId, adminUsername}: {currentUserId: string;
+//   adminUsername: string;}) => {
+//     const [isOpen, setIsOpen] = useState(false)
+//     <div>
+//     <Button onClick={(e) => JoinCompetition({userId: currentUserId, competitionId})}>
+//                  Join
+//     </Button>
+//     </div>
+// }

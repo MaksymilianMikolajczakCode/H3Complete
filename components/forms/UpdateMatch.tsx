@@ -39,11 +39,11 @@ interface Props {
     matchNumber: number;
     competition: string;
     NoR1Games: number;
+    competitionOwner: string;
   }
 }
 
 function PostCompetition({ matchData }: Props) {
-  console.log(matchData.matchId)
   const router = useRouter();
   const pathname = usePathname();
   const form = useForm<z.infer<typeof MatchValidation>>({
