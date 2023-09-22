@@ -14,8 +14,6 @@ async function Page() {
 
   return (
     <>
-      <h1 className='head-text'>Create Thread</h1>
-
       <PostCompetition userId={userInfo._id} />
     </>
   );

@@ -6,6 +6,7 @@ import Pagination from "@/components/Pagination";
 
 import { fetchCompetitions } from "@/lib/actions/competition.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
+import Link from "next/link";
 
 async function Competitions({
   searchParams,
@@ -27,6 +28,9 @@ async function Competitions({
       <h1 className='head-text text-left'>Competitions</h1>
 
       <section className='mt-9 flex flex-col gap-10'>
+        <Link href="/create-competition">
+          Add Competition
+        </Link>
         {result.competitions.length === 0 ? (
           <p className='no-result'>No threads found</p>
         ) : (

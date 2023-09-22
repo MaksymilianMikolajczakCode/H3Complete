@@ -11,7 +11,7 @@ async function page({ params }: { params: { id: string } }) {
 
   const template = await fetchTemplateById(params.id);
   return (
-    <section className='relative'>
+    <section>
       <div>
         <Template
                 title={template.title}

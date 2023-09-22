@@ -24,11 +24,24 @@ import { TemplateValidation } from "@/lib/validations/template";
 import { createTemplate } from "@/lib/actions/template.actions";
 import { Input } from "../ui/input";
 import { ChangeEvent, useState } from "react";
+import Tiptap from "../Tiptap";
 
 
 function PostTemplate() {
   const router = useRouter();
   const pathname = usePathname();
+  const [tiptapRules, setTiptapRules] = useState('')
+  const [tiptapSpecification, setTiptapSpecification] = useState(`<p>Some text here</p>
+  <ul>
+    <li><strong>Bullet list item 1</strong></li>
+    <li>Bullet list item 2</li>
+  </ul>
+  <ol>
+    <li>Ordered list item 1</li>
+    <li>Ordered list item 2</li>
+  </ol>`)
+  const [tiptapSettings, setTiptapSettings] = useState('')
+  const [tiptapTrade, setTiptapTrade] = useState('')
   const { startUpload } = useUploadThing("media");
   const [files, setFiles] = useState<File[]>([]);
   const handleImage = (
@@ -87,28 +100,29 @@ function PostTemplate() {
         title: values.title,
         download: values.download,
         description: values.description,
-        specification: values.specification,
+        specification: tiptapSpecification,
         // creator: values.creator,
-        settings: values.settings,
-        rules: values.rules,
+        settings: tiptapSettings,
+        rules: tiptapRules,
         image: values.image,
-        trade: values.trade,
+        trade: tiptapTrade,
       path: pathname
     });
    router.push("/");
   };
 
   return (
+    <div>
     <Form {...form}>
       <form
-        className='mt-10 flex flex-col justify-start gap-10'
+        className='mt-10 mx-[calc(10vw)] w-[calc(80vw)] flex flex-col justify-start gap-10'
         onSubmit={form.handleSubmit(onSubmit)}
       >
                 <FormField
           control={form.control}
           name='image'
           render={({ field }) => (
-            <FormItem className='flex items-center gap-4'>
+            <FormItem className='flex w-full flex-col gap-3'>
               {/* <FormLabel className='account-form_image-label'>
                 {field.value ? (
                   <Image
@@ -129,6 +143,9 @@ function PostTemplate() {
                   />
                 )}
               </FormLabel> */}
+              <FormLabel className='text-base-semibold text-light-2'>
+                    Image
+                </FormLabel>
               <FormControl className='flex-1 text-base-semibold text-gray-200'>
                 <Input
                   type='file'
@@ -166,7 +183,7 @@ function PostTemplate() {
                 Description
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
+                <Textarea {...field}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -176,12 +193,12 @@ function PostTemplate() {
           control={form.control}
           name='specification'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
+            <FormItem className='flex w-full flex-col gap-3 prose leading-[5px]'>
               <FormLabel className='text-base-semibold text-light-2'>
                 specification
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
+                <Tiptap content={tiptapSpecification} onChange={(newContent) => setTiptapSpecification(newContent)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -191,12 +208,12 @@ function PostTemplate() {
           control={form.control}
           name='rules'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
+            <FormItem className='flex w-full flex-col gap-3 prose leading-[5px]'>
               <FormLabel className='text-base-semibold text-light-2'>
                 rules
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
+                <Tiptap content={tiptapRules} onChange={(newContent) => setTiptapRules(newContent)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -206,12 +223,12 @@ function PostTemplate() {
           control={form.control}
           name='settings'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
+            <FormItem className='flex w-full flex-col gap-3 prose leading-[5px]'>
               <FormLabel className='text-base-semibold text-light-2'>
                 settings
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
+                <Tiptap content={tiptapSettings} onChange={(newContent) => setTiptapSettings(newContent)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -236,12 +253,12 @@ function PostTemplate() {
           control={form.control}
           name='trade'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
+            <FormItem className='flex w-full flex-col gap-3 prose leading-[5px]'>
               <FormLabel className='text-base-semibold text-light-2'>
                 Trade
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
+                <Tiptap content={tiptapTrade} onChange={(newContent) => setTiptapTrade(newContent)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -252,6 +269,7 @@ function PostTemplate() {
         </Button>
       </form>
     </Form>
+    </div>
   );
 }
 

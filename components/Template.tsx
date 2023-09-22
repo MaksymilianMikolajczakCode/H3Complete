@@ -1,9 +1,6 @@
-import { Button } from "./ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-import { formatDateString } from "@/lib/utils";
-import ClientButton from "./ClientButton";
 // import DeleteThread from "../forms/DeleteThread";
 
 interface Props {
@@ -29,13 +26,48 @@ function Template({
 }: Props) {
   return (
     <article
-      className={"flex w-full flex-col rounded-xl"}
+      className={"flex"}
     >
-      <div>
-        <h1>{title}</h1>
-        {description}
-        {rules}
-        {settings}
+      <div className="flex-row w-[calc(100vw-252px)] mr-5">
+        <div className="font-bold text-2xl">
+          {title}
+        </div>
+        <div className="mt-3">
+          <h2 className="font-semibold text-lg whitespace-pre-line">Description</h2>
+          {description}
+        </div>
+        <div className="text-sky-500 mt-1">
+          {download? <Link href={download}>
+            Download {title}
+          </Link> : <span></span>}
+        </div>
+        <div className="mt-1 whitespace-pre-line">
+        <h2 className="font-semibold text-lg">Settings</h2>
+          {settings}
+        </div>
+        <div className="mt-1">
+        <h2 className="font-semibold text-lg">Graph</h2>
+          <Image
+            src={image}
+            alt='profile_icon'
+            width={1000}
+            height={500}
+            layout="responsive"
+            priority
+          />
+        </div>
+        <div className="mt-1 whitespace-pre-line">
+        <h2 className="font-semibold text-lg">Specification</h2>
+          {specification}
+        </div>
+        <div className="mt-1">
+        <h2 className="font-semibold text-lg whitespace-pre-line">Rules</h2>
+          {rules}
+        </div>
+        <div className="mt-1">
+        <h2 className="font-semibold text-lg whitespace-pre-line">Trade</h2>
+          {trade}
+        </div>
       </div>
       {/* <div className='flex items-start justify-between'>
         <div className='flex w-full flex-1 flex-row gap-4'>

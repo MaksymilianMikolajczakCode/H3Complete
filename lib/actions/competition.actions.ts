@@ -51,11 +51,11 @@ interface Params {
   regulations: String,
   details: String,
   startDate: Date,
-  type: String,
+  // type: String,
   path: string,
 }
 
-export async function createCompetition({ title, owner, regulationsLink, regulations, details, startDate, type, path}: Params
+export async function createCompetition({ title, owner, regulationsLink, regulations, details, startDate, path}: Params
 ) {
   try {
     connectToDB();
@@ -66,7 +66,7 @@ export async function createCompetition({ title, owner, regulationsLink, regulat
       regulations,
       details,
       startDate,
-      type
+      // type
     });
 
     // Update User model

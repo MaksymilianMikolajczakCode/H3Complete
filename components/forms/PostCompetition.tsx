@@ -2,7 +2,6 @@
 
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { useOrganization } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils"
@@ -28,12 +27,22 @@ import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from ".
 import { Calendar } from "../ui/calendar";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import Tiptap from "../Tiptap";
 
 interface Props {
   userId: string;
 }
 
 function PostCompetition({ userId }: Props) {
+  const [tiptapContent, setTiptapContent] = useState(`<p>Some text here</p>
+  <ul>
+    <li><strong>Bullet list item 1</strong></li>
+    <li>Bullet list item 2</li>
+  </ul>
+  <ol>
+    <li>Ordered list item 1</li>
+    <li>Ordered list item 2</li>
+  </ol>`);
   const [startDate, setStartDate] = useState<Date | undefined>(new Date())
   const router = useRouter();
   const pathname = usePathname();
@@ -53,10 +62,10 @@ function PostCompetition({ userId }: Props) {
       title: values.title,
       owner: userId,
       details: values.details,
-      regulations: values.regulations,
+      regulations: tiptapContent,
       regulationsLink: values.regulationsLink,
       startDate: values.startDate,
-      type: values.type,
+      // type: values.type,
       path: pathname
     });
     // console.log(title, owner, details, regulations, regulationsLink, startDate, type)
@@ -66,7 +75,7 @@ function PostCompetition({ userId }: Props) {
   return (
     <Form {...form}>
       <form
-        className='mt-10 flex flex-col justify-start gap-10'
+        className='mt-10 mx-[calc(10vw)] w-[calc(80vw)] flex flex-col justify-start gap-10'
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
@@ -99,16 +108,17 @@ function PostCompetition({ userId }: Props) {
             </FormItem>
           )}
         />
+        
         <FormField
           control={form.control}
           name='regulations'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
+            <FormItem className='flex w-full flex-col gap-3 prose leading-[5px]'>
               <FormLabel className='text-base-semibold text-light-2'>
                 regulations
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Textarea rows={10} {...field} />
+                <Tiptap content={tiptapContent} onChange={(newContent) => setTiptapContent(newContent)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -171,7 +181,7 @@ function PostCompetition({ userId }: Props) {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name='type'
           render={({ field }) => (
@@ -195,7 +205,7 @@ function PostCompetition({ userId }: Props) {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <Button type='submit' className='bg-primary-500'>
           Post Competition
