@@ -84,7 +84,7 @@ function PostTemplate() {
   });
 
   const onSubmit = async (values: z.infer<typeof TemplateValidation>) => {
-
+    console.log(tiptapTrade)
     // const blob = values.profile_photo;
 
     // const hasImageChanged = isBase64Image(blob);

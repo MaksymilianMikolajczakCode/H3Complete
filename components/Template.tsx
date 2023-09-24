@@ -43,7 +43,7 @@ function Template({
         </div>
         <div className="mt-1 whitespace-pre-line">
         <h2 className="font-semibold text-lg">Settings</h2>
-          {settings}
+        <div className="prose leading-[5px] w-[calc(100vw-252px)]"><div dangerouslySetInnerHTML={{ __html: settings }} className="w-[calc(100vw-252px)]"/></div>
         </div>
         <div className="mt-1">
         <h2 className="font-semibold text-lg">Graph</h2>
@@ -57,16 +57,16 @@ function Template({
           />
         </div>
         <div className="mt-1 whitespace-pre-line">
-        <h2 className="font-semibold text-lg">Specification</h2>
-          {specification}
+          <h2 className="font-semibold text-lg">Specification</h2>
+        <div className="prose leading-[5px] w-full"><div dangerouslySetInnerHTML={{ __html: specification }} className="w-[calc(100vw-252px)]"/></div>
         </div>
         <div className="mt-1">
         <h2 className="font-semibold text-lg whitespace-pre-line">Rules</h2>
-          {rules}
+        <div className="prose leading-[5px]"><div dangerouslySetInnerHTML={{ __html: rules }} className="w-[calc(100vw-252px)]"/></div>
         </div>
         <div className="mt-1">
         <h2 className="font-semibold text-lg whitespace-pre-line">Trade</h2>
-          {trade}
+        <div className="prose leading-[5px]"><div dangerouslySetInnerHTML={{ __html: trade }}className="w-[calc(100vw-252px)]" /></div>
         </div>
       </div>
       {/* <div className='flex items-start justify-between'>

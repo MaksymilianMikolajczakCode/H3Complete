@@ -43,6 +43,9 @@ async function Competitions({
                 title={competition.title}
                 owner={competition.owner}
                 startDate={competition.startDate}
+                image={competition.image}
+                players={competition.players.length}
+                bracket={competition.bracket.length}
               />
             ))}
           </>

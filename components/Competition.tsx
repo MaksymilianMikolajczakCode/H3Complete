@@ -64,7 +64,7 @@ function Competition({
       <div>
         <h1>{title}</h1>
         {details}
-        <div className="prose"><div dangerouslySetInnerHTML={{ __html: regulations }} /></div>
+        <div className="prose leading-[5px]"><div dangerouslySetInnerHTML={{ __html: regulations }} className="w-[calc(100vw-252px)]"/></div>
 
         {regulationsLink}
         {players.map((player) => (

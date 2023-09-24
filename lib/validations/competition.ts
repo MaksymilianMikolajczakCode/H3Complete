@@ -6,5 +6,6 @@ export const CompetitionValidation = z.object({
   details: z.string(),
   regulations: z.string(),
   regulationsLink: z.string(),
-  startDate: z.date()
+  startDate: z.date(),
+  image: z.string(),
 });

@@ -25,7 +25,7 @@ import { createCompetition } from "@/lib/actions/competition.actions";
 import { Input } from "../ui/input";
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "../ui/select";
 import { Calendar } from "../ui/calendar";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Tiptap from "../Tiptap";
 
@@ -46,7 +46,29 @@ function PostCompetition({ userId }: Props) {
   const [startDate, setStartDate] = useState<Date | undefined>(new Date())
   const router = useRouter();
   const pathname = usePathname();
+  const [files, setFiles] = useState<File[]>([]);
+  const handleImage = (
+    e: ChangeEvent<HTMLInputElement>,
+    fieldChange: (value: string) => void
+  ) => {
+    e.preventDefault();
 
+    const fileReader = new FileReader();
+
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setFiles(Array.from(e.target.files));
+
+      if (!file.type.includes("image")) return;
+
+      fileReader.onload = async (event) => {
+        const imageDataUrl = event.target?.result?.toString() || "";
+        fieldChange(imageDataUrl);
+      };
+
+      fileReader.readAsDataURL(file);
+    }
+  };
   const form = useForm<z.infer<typeof CompetitionValidation>>({
     resolver: zodResolver(CompetitionValidation),
     defaultValues: {
@@ -66,6 +88,7 @@ function PostCompetition({ userId }: Props) {
       regulationsLink: values.regulationsLink,
       startDate: values.startDate,
       // type: values.type,
+      image: values.image,
       path: pathname
     });
     // console.log(title, owner, details, regulations, regulationsLink, startDate, type)
@@ -78,6 +101,46 @@ function PostCompetition({ userId }: Props) {
         className='mt-10 mx-[calc(10vw)] w-[calc(80vw)] flex flex-col justify-start gap-10'
         onSubmit={form.handleSubmit(onSubmit)}
       >
+        <FormField
+          control={form.control}
+          name='image'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              {/* <FormLabel className='account-form_image-label'>
+                {field.value ? (
+                  <Image
+                    src={field.value}
+                    alt='profile_icon'
+                    width={96}
+                    height={96}
+                    priority
+                    className='rounded-full object-contain'
+                  />
+                ) : (
+                  <Image
+                    src='/assets/profile.svg'
+                    alt='profile_icon'
+                    width={24}
+                    height={24}
+                    className='object-contain'
+                  />
+                )}
+              </FormLabel> */}
+              <FormLabel className='text-base-semibold text-light-2'>
+                    Image
+                </FormLabel>
+              <FormControl className='flex-1 text-base-semibold text-gray-200'>
+                <Input
+                  type='file'
+                  accept='image/*'
+                  placeholder='Add profile photo'
+                  className='account-form_image-input'
+                  onChange={(e) => handleImage(e, field.onChange)}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name='title'

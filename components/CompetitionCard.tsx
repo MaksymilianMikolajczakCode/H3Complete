@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { format } from 'date-fns';
+
 
 import { formatDateString } from "@/lib/utils";
 // import DeleteThread from "../forms/DeleteThread";
@@ -14,6 +16,9 @@ interface Props {
     id: string;
   };
   startDate: Date;
+  players: number;
+  image: string;
+  bracket: number;
 }
 
 function CompetitionCard({
@@ -21,74 +26,43 @@ function CompetitionCard({
   title,
   owner,
   startDate,
+  players,
+  bracket,
+  image
 }: Props) {
-  console.log(id)
+  const formattedDate = format(startDate, 'dd-MM-yyyy');
   return (
     <article
       className={"flex w-full flex-col rounded-xl"}
     >
       <div className='flex items-start justify-between'>
         <div className='flex w-full flex-1 flex-row gap-4'>
+          {image? 
           <div className='flex flex-col items-center'>
-            <Link href={`/profile/${owner.id}`} className='relative h-11 w-11'>
-              <Image
-                src={owner.image}
-                alt='user_image'
-                fill
-                className='cursor-pointer rounded-full'
-              />
-            </Link>
+          <Image
+            src={image}
+            alt='user_image'
+            width={70}
+            height={70}
+            className='cursor-pointer rounded-full'
+          />
 
-            <div className='thread-card_bar' />
-          </div>
+        <div className='thread-card_bar' />
+      </div> : <></>}
+          
 
           <div className='flex w-full flex-col'>
-            <Link href={`/profile/${owner.id}`} className='w-fit'>
-              <h4 className='cursor-pointer text-base-semibold text-light-1'>
-                {owner.username}
-              </h4>
-            </Link>
             <Link href={`competitions/${id}`}>
                 <p className='mt-2 text-small-regular text-light-2'>{title}</p>
             </Link>
-
-            <div className={"mt-5 flex flex-col gap-3"}>
-              <div className='flex gap-3.5'>
-                <Image
-                  src='/assets/heart-gray.svg'
-                  alt='heart'
-                  width={24}
-                  height={24}
-                  className='cursor-pointer object-contain'
-                />
-                <Link href={`/competition/${id}`}>
-                  <Image
-                    src='/assets/reply.svg'
-                    alt='heart'
-                    width={24}
-                    height={24}
-                    className='cursor-pointer object-contain'
-                  />
-                </Link>
-                <Image
-                  src='/assets/repost.svg'
-                  alt='heart'
-                  width={24}
-                  height={24}
-                  className='cursor-pointer object-contain'
-                />
-                <Image
-                  src='/assets/share.svg'
-                  alt='heart'
-                  width={24}
-                  height={24}
-                  className='cursor-pointer object-contain'
-                />
-              </div>
-            </div>
           </div>
         </div>
-        
+        <div>
+          {bracket == 0? <div>status: starts {formattedDate}</div> : <div>status: ongoing</div>}
+        </div>
+        <div>
+          {players == 0?<div>Be first to register!</div> : <div>{players} players registered!</div>}
+        </div>
         {/* <DeleteThread
           threadId={JSON.stringify(id)}
           currentUserId={currentUserId}

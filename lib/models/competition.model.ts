@@ -59,7 +59,8 @@ const competitionSchema = new Schema({
   bracket: [{
     type: Schema.Types.ObjectId,
     ref: 'Match'
-  }]
+  }],
+  image: String,
   // round: [subSchema],
 //   rounds: [subSchema2]
 });

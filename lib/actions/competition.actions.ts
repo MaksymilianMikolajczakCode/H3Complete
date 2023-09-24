@@ -53,9 +53,10 @@ interface Params {
   startDate: Date,
   // type: String,
   path: string,
+  image: string,
 }
 
-export async function createCompetition({ title, owner, regulationsLink, regulations, details, startDate, path}: Params
+export async function createCompetition({ title, owner, regulationsLink, regulations, details, startDate, image, path}: Params
 ) {
   try {
     connectToDB();
@@ -66,6 +67,7 @@ export async function createCompetition({ title, owner, regulationsLink, regulat
       regulations,
       details,
       startDate,
+      image,
       // type
     });
 
