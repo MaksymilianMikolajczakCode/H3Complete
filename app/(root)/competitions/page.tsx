@@ -25,9 +25,7 @@ async function Competitions({
   );
   return (
     <>
-      <h1 className='head-text text-left'>Competitions</h1>
-
-      <section className='mt-9 flex flex-col gap-10'>
+      <section className='mt-9 flex flex-col w-[99vw] gap-10 px-[20vw] mb-10'>
         <Link href="/create-competition">
           Add Competition
         </Link>
@@ -51,12 +49,6 @@ async function Competitions({
           </>
         )}
       </section>
-
-      <Pagination
-        path='/'
-        pageNumber={searchParams?.page ? +searchParams.page : 1}
-        isNext={result.isNext}
-      />
     </>
   );
 }

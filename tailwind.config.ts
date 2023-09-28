@@ -29,7 +29,7 @@ module.exports = {
       },
       maxWidth: {
         '10xl': '1680px'
-      }
+      },
     },
   },
   plugins: [require('@tailwindcss/typography')],

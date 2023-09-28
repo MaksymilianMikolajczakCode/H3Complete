@@ -178,6 +178,7 @@ export async function fetchCompetitionById(competitionId: string) {
 
   try {
     const competitionQuery = Competition.findById(competitionId)
+    .lean()
       .populate({
         path: "owner",
         model: User,
@@ -372,7 +373,7 @@ export async function fetchMatch(matchId: string) {
     .populate({
       path: "players",
       model: User,
-      select: "username _id"
+      select: "username _id image"
     })
     .populate({
       path: "competition",

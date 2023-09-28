@@ -9,7 +9,7 @@ async function TemplatesLayout({
   const result = await fetchTemplates();
   return (
     <section className='flex flex-row w-[calc(100vw-30px)] overflow-x-hidden'>
-    <div className="mt-5 w-208px flex flex-col gap-5 m-3">
+    <div className="mt-5 w-208px max-w-xs flex flex-col gap-5 m-3">
       {result.templates.map((template) => (
         <Link 
           href={`/templates/${template._id}`}

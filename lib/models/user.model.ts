@@ -17,11 +17,6 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-//   role: {
-//     type: String,
-//     enum: ['admin', 'player'],
-//     default: 'admin'
-//   },
   discord: {
     type: String,
     required: false

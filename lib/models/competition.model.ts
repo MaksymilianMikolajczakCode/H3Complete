@@ -61,8 +61,6 @@ const competitionSchema = new Schema({
     ref: 'Match'
   }],
   image: String,
-  // round: [subSchema],
-//   rounds: [subSchema2]
 });
 
 const Competition = mongoose.models.Competition || mongoose.model("Competition", competitionSchema);

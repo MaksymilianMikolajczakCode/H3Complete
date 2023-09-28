@@ -13,6 +13,107 @@ body {
   font-family: Inter;
 }
 
+.prose p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.prose ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.prose ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.prose li {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.window {
+  height: 80vh;
+  max-height: 70vh; /* Adjust the desired height */
+  overflow-y: auto;
+  width: 70vw;
+  margin: auto;
+  padding: 10px; /* Optional: Add padding for spacing */
+}
+
+/* Style for the bracket container */
+/* Style for the overall bracket container */
+.bracket {
+  display: flex;
+  margin: auto;
+  gap: 32px; /* Increase the gap for spacing between rounds */
+  align-items: stretch; /* Ensure equal height */
+}
+
+/* Style for each round in the bracket */
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allow each round to grow to an equal height */
+  align-items: center; /* Center content horizontally */
+  justify-content: space-around; /* Distribute matches evenly vertically */
+  text-align: center;
+}
+
+/* Style for the Match component */
+.Match {
+  /* Style your Match component as needed */
+  height: 80px; /* Adjust match height as needed */
+  width: 160px; /* Adjust match width as needed */
+  border: 1px solid #ccc; /* Add a border for separation */
+  background-color: #f9f9f9; /* Add a background color */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px; /* Adjust padding as needed */
+}
+
+/* Style for the winner match */
+.Match.winner {
+  background-color: #a1e577; /* Change background color for the winner */
+  border: 1px solid #5ab65a; /* Change border color for the winner */
+  color: #fff; /* Change text color for the winner */
+}
+
+/* Add hover effect for matches (optional) */
+.Match:hover {
+  background-color: #e3e3e3;
+  cursor: pointer;
+}
+
+/* Style round 0 specifically */
+.round-0 {
+  gap: 16px;
+}
+
+/* Style round 1 specifically */
+.round-1 {
+  /* Add styles specific to round 1 here */
+}
+
+/* Style round 2 specifically */
+.round-2 {
+  /* Add styles specific to round 2 here */
+}
+
+/* Add styles for rounds 3 to 10 as needed */
+.round-3 {
+  /* Add styles specific to round 3 here */
+}
+
+/* Add styles for rounds 4 to 10 as needed */
+/* ... */
+
+/* Add styles for rounds 10 as needed */
+.round-10 {
+  /* Add styles specific to round 10 here */
+}
+
 .flexCenter {
   @apply flex justify-center items-center;
 }

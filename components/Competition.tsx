@@ -1,12 +1,13 @@
-
+'use client'
 import { Button } from "./ui/button";
 import Image from "next/image";
 import Link from "next/link";
-
+import { format } from 'date-fns';
 import { formatDateString } from "@/lib/utils";
 import {ClientButton, JoinButton} from "./ClientButton";
 import Match from "./Match";
 import Bracket from "./Bracket";
+import { useState } from "react";
 // import DeleteThread from "../forms/DeleteThread";
 
 interface Props {
@@ -56,76 +57,97 @@ function Competition({
   const arrayOfIds = players.map(obj => obj._id.toString());
   const alreadyRegistered = arrayOfIds.includes(currentUserId.toString())
   const canGenerate = owner._id.toString() == currentUserId.toString()
-  console.log(canGenerate)
+  const [activeWindow, setActiveWindow] = useState(0);
+  const formattedDate = format(startDate, 'dd-MM-yyyy');
   return (
-    <article
-      className={"flex w-full flex-col rounded-xl"}
-    >
-      <div>
-        <h1>{title}</h1>
-        {details}
-        <div className="prose leading-[5px]"><div dangerouslySetInnerHTML={{ __html: regulations }} className="w-[calc(100vw-252px)]"/></div>
+    <article className="mx-[10vw] flex w-[80vw] flex-col p-4 shadow-md absolute">
+      <div className="w-full">
 
-        {regulationsLink}
-        {players.map((player) => (
-               <div>
-                {player.username}
-                 {player.image}
-                </div>
-             ))}
-            {bracket[0] ? <Bracket  bracket={bracket}/> : <div>
-            {canGenerate? <ClientButton currentUserId={currentUserId} competitionId={id}/>: <div></div>}
-            {alreadyRegistered? <div></div> : <JoinButton currentUserId={currentUserId} competitionId={id}/>}
-            </div> }
-             {/* {bracket.map((match) => 
-              <Match 
-                 key={match.id}
-                 id={match.id}
-                 players={match.players}
-                 matchNumber={match.matchNumber} 
-                 roundNumber={match.roundNumber}              
-                />
-             )} */}
-            {/* <Match  
-              id={}
-              players={}
-              matchNumber={}
-            /> */}
-      </div>
-      <div className='flex items-start justify-between'>
-        <div className='flex w-full flex-1 flex-row gap-4'>
-          <div className='flex flex-col items-center'>
-            <Link href={`/profile/${owner.id}`} className='relative h-11 w-11'>
-              <Image
-                src={owner.image}
-                alt='user_image'
-                fill
-                className='cursor-pointer rounded-full'
-              />
-            </Link>
-
-            <div className='thread-card_bar' />
-          </div>
-
-          <div className='flex w-full flex-col'>
-            <Link href={`/profile/${owner.id}`} className='w-fit'>
-              <h4 className='cursor-pointer text-base-semibold text-light-1'>
-                {owner.username}
-              </h4>
-            </Link>
-            <Link href={`competitions/${id}`}>
-                <p className='mt-2 text-small-regular text-light-2'>{title}</p>
-            </Link>
+        {/* Buttons to switch between windows */}
+        <div className="w-full flex justify-center items-stretch">
+          {/* Buttons to switch between windows */}
+          <div className="mt-4 space-x-4">
+            <button
+              onClick={() => setActiveWindow(0)}
+              className={`${
+                activeWindow === 0 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+              } px-4 py-2 rounded flex-grow`}
+            >
+              Info
+            </button>
+            <button
+              onClick={() => setActiveWindow(2)}
+              className={`${
+                activeWindow === 2 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+              } px-4 py-2 rounded flex-grow`}
+            >
+              Regulations
+            </button>
+            <button
+              onClick={() => setActiveWindow(1)}
+              className={`${
+                activeWindow === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+              } px-4 py-2 rounded flex-grow`}
+            >
+              Bracket
+            </button>
           </div>
         </div>
-        
-        {/* <DeleteThread
-          threadId={JSON.stringify(id)}
-          currentUserId={currentUserId}
-          authorId={author.id}
-          parentId={parentId}
-          isComment={isComment}
-        /> */}
+        {/* Window 1: Regulations */}
+        {activeWindow === 2 && (
+          <div className="mt-4 prose window">
+            <div dangerouslySetInnerHTML={{ __html: regulations }} />
+          </div>
+        )}
+
+        {/* Window 2: Bracket */}
+        {activeWindow === 1 && bracket[0] && (
+          <div className="mt-4 window">
+            {/* Render your bracket component here */}
+            <Bracket bracket={bracket} />
+          </div>
+        )}
+
+        {/* Window 3: Info */}
+        {activeWindow === 0 && (
+          <div className="window">
+          <h1 className="text-2xl font-semibold">{title}</h1>
+          <div className="mt-2 text-gray-600">{details}</div>
+          <div className="text-sky-500 mt-1">
+          {regulationsLink? <Link href={regulationsLink}>
+            Regulations
+          </Link> : <span></span>}
+        </div>
+        <div className="text-green-500">Starts {formattedDate}</div>
+        <div className="text-sm text-gray-600 flex items-center">
+          Created by:{" "}
+          <Image
+            src={owner.image}
+            alt={`${owner.username}'s avatar`}
+            width={30}
+            height={30}
+            className="rounded-full ml-2 mr-2"
+          />
+          {owner.username}
+        </div>
+            {players.map((player) => (
+              <div key={player._id} className="mt-2 flex items-center">
+                {/* Render player info here */}
+              </div>
+            ))}
+
+            <div className="mt-4 flex items-center">
+              {canGenerate ? (
+                <ClientButton currentUserId={currentUserId} competitionId={id} />
+              ) : alreadyRegistered ? (
+                <div>Already registered</div>
+              ) : (
+                <JoinButton currentUserId={currentUserId} competitionId={id} />
+              )}
+            </div>
+          </div>
+        )}
+
       </div>
     </article>
   );
