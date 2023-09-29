@@ -10,5 +10,6 @@ export const MatchValidation = z.object({
   matchNumber: z.number(),
   competition: z.string(),
   NoR1Games: z.number(),
-  matchId: z.string()
+  matchId: z.string(),
+  description: z.string(),
 });

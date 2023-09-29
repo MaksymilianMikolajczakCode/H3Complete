@@ -24,6 +24,7 @@ async function page({ params }: { params: { id: string } }) {
     competitionOwner: match.competition.owner,
     matchNumber: match.matchNumber,
     NoR1Games: match.NoR1Games,
+    description: match.description,
 
     // matchInfo ? matchInfo?.matchname : match.matchname,
 
@@ -33,7 +34,7 @@ async function page({ params }: { params: { id: string } }) {
   }
   else {
   return (
-    <section className='relative'>
+    <section>
       <UpdateMatch 
         matchData={matchData}
       />

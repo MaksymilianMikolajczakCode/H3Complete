@@ -176,7 +176,7 @@ function PostCompetition({ userId }: Props) {
           control={form.control}
           name='regulations'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3 prose leading-[5px]'>
+            <FormItem className='flex w-full flex-col gap-3 prose'>
               <FormLabel className='text-base-semibold text-light-2'>
                 regulations
               </FormLabel>

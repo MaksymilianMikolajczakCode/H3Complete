@@ -40,6 +40,14 @@ body {
   padding: 10px; /* Optional: Add padding for spacing */
 }
 
+.window2 {
+  max-height: 400px;
+  overflow-y: auto;
+  width: 70vw;
+  margin: auto;
+  padding: 10px; /* Optional: Add padding for spacing */
+}
+
 /* Style for the bracket container */
 /* Style for the overall bracket container */
 .bracket {

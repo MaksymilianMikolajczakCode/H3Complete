@@ -112,7 +112,6 @@ function PostTemplate() {
   };
 
   return (
-    <div>
     <Form {...form}>
       <form
         className='mt-10 mx-[calc(10vw)] w-[calc(80vw)] flex flex-col justify-start gap-10'
@@ -193,7 +192,7 @@ function PostTemplate() {
           control={form.control}
           name='specification'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3 prose leading-[5px]'>
+            <FormItem className='flex w-full flex-col gap-3 prose'>
               <FormLabel className='text-base-semibold text-light-2'>
                 specification
               </FormLabel>
@@ -208,7 +207,7 @@ function PostTemplate() {
           control={form.control}
           name='rules'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3 prose leading-[5px]'>
+            <FormItem className='flex w-full flex-col gap-3 prose'>
               <FormLabel className='text-base-semibold text-light-2'>
                 rules
               </FormLabel>
@@ -223,7 +222,7 @@ function PostTemplate() {
           control={form.control}
           name='settings'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3 prose leading-[5px]'>
+            <FormItem className='flex w-full flex-col gap-3 prose'>
               <FormLabel className='text-base-semibold text-light-2'>
                 settings
               </FormLabel>
@@ -253,7 +252,7 @@ function PostTemplate() {
           control={form.control}
           name='trade'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3 prose leading-[5px]'>
+            <FormItem className='flex w-full flex-col gap-3 prose'>
               <FormLabel className='text-base-semibold text-light-2'>
                 Trade
               </FormLabel>
@@ -269,7 +268,6 @@ function PostTemplate() {
         </Button>
       </form>
     </Form>
-    </div>
   );
 }
 

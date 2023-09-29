@@ -50,6 +50,9 @@ const matchSchema = new mongoose.Schema({
       },
       NoR1Games: {
         type: Number
+      },
+      description: {
+        type: String
       }
 });
 

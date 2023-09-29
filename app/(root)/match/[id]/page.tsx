@@ -14,11 +14,11 @@ async function page({ params }: { params: { id: string } }) {
   const match = await fetchMatch(params.id);
   const canUpdate = [match.competition.owner.toString(), match.players[1]?._id.toString(), match.players[0]?._id.toString()].includes(userInfo._id.toString())
   return (
-    <section className="flex flex-col text-center items-center w-screen">
+    <section className="flex flex-col text-center items-center w-[calc(100vw-5px)]">
   <div className="font-bold text-4xl mb-4 mt-10">Match Details</div>
   <div className="flex justify-center items-center space-x-8">
     {match.players.length === 1 ? (
-      <div className="flex space-x-4 w-[60vw] h-[400px] justify-between items-center">
+      <div className="flex space-x-4 w-[60vw] h-[200px] justify-between items-center">
         <div className="flex-col space-y-5">
           <div>
             <Image
@@ -52,7 +52,7 @@ async function page({ params }: { params: { id: string } }) {
         </div>
       </div>
     ) : match.players.length === 0 ? (
-      <div className="flex space-x-4 w-[60vw] h-[400px] justify-between items-center">
+      <div className="flex space-x-4 w-[60vw] h-[200px] justify-between items-center">
         <div className="flex-col space-y-5">
         <Image
           src="/assets/Icon-round-Question_mark.svg"
@@ -84,7 +84,7 @@ async function page({ params }: { params: { id: string } }) {
         </div>
       </div>
     ) : (
-      <div className="flex space-x-4 w-[60vw] h-[400px] justify-between items-center">
+      <div className="flex space-x-4 w-[60vw] h-[200px] justify-between items-center">
         <div className="flex-col space-y-5">
           <div>
             <Image
@@ -121,18 +121,62 @@ async function page({ params }: { params: { id: string } }) {
   </div>
 
   
-  <div className="font-bold text-2xl mt-8 mb-4">Games</div>
-
-
-  {canUpdate ? (
-    <Link href={`/update-match/${match.id}`}>
-      <Button className="bg-blue-500 text-white py-2 px-4 rounded-lg">
+  <div className="flex font-bold text-2xl mt-8">Games</div>
+  <div>
+<div className="window2">
+  {match.games.length ? (
+    <div className="grid grid-cols-1 gap-4">
+      {match.games.map((game, index) => (
+        <div key={index} className="bg-white p-4 rounded-lg shadow-md">
+          <div className="flex justify-around">
+            <div className="font-semibold text-lg text-green-500">
+              {game.winner.username}
+            </div>
+            <div className="font-semibold text-lg text-red-500">
+              {game.loser.username}
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mt-2">
+            <div>
+              <div className="font-semibold">Castle:</div>
+              <div>{game.winnerCastle}</div>
+            </div>
+            <div>
+              <div className="font-semibold">Castle:</div>
+              <div>{game.loserCastle}</div>
+            </div>
+            <div>
+              <div className="font-semibold">Trade:</div>
+              <div>{game.winnerTrade}</div>
+            </div>
+            <div>
+              <div className="font-semibold">Trade:</div>
+              <div>{game.loserTrade}</div>
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="font-semibold">Description:</div>
+            <div>{game.description}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div className="text-gray-600">No matches played</div>
+  )}
+</div>
+</div>
+{match.games.length == 1? <div></div> : <div>
+{canUpdate ? (
+    <Link href={`/update-match/${match._id}`}>
+      <Button className="bg-blue-500 text-white py-2 px-4 rounded-lg mb-10">
         Add Report
       </Button>
     </Link>
   ) : (
     <div></div>
   )}
+  </div>}
 </section>
 
   );

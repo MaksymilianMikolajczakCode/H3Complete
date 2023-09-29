@@ -40,6 +40,7 @@ interface Props {
     competition: string;
     NoR1Games: number;
     competitionOwner: string;
+    description: string;
   }
 }
 
@@ -59,6 +60,7 @@ function PostCompetition({ matchData }: Props) {
       competition: matchData.competition,
       NoR1Games: matchData.NoR1Games,
       matchId: matchData.matchId,
+      description: "",
     },
   });
 
@@ -74,6 +76,7 @@ function PostCompetition({ matchData }: Props) {
       competition: values.competition,
       NoR1Games: values.NoR1Games,
       matchId: values.matchId,
+      description: values.description,
       path: pathname
     });
     // console.log(title, owner, details, regulations, regulationsLink, startDate, type)
@@ -82,154 +85,170 @@ function PostCompetition({ matchData }: Props) {
 
   return (
     <Form {...form}>
-      <form
-        className='mt-10 flex flex-col justify-start gap-10'
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <FormField
+  <form
+    className='mt-10 mx-[calc(10vw)] w-[calc(80vw)] flex flex-col justify-start gap-10'
+    onSubmit={form.handleSubmit(onSubmit)}
+  >
+    <FormField
+      control={form.control}
+      name='winner'
+      render={({ field }) => (
+        <FormItem className='flex w-full flex-col gap-3'>
+          <FormLabel className='text-base-semibold text-light-2'>
+            Won
+          </FormLabel>
+          <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent >
+                <SelectItem value={matchData.player1id} >{matchData.player1username}</SelectItem>
+                <SelectItem value={matchData.player2id} >{matchData.player2username}</SelectItem>
+              </SelectContent>
+            </Select>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={form.control}
+      name='winnerTrade'
+      render={({ field }) => (
+        <FormItem className='flex w-full flex-col gap-3'>
+          <FormLabel className='text-base-semibold text-light-2'>
+            Winner Trade
+          </FormLabel>
+          <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 w-[180px]'>
+            <Input {...field} type="number"/>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={form.control}
+      name='loser'
+      render={({ field }) => (
+        <FormItem className='flex w-full flex-col gap-3'>
+          <FormLabel className='text-base-semibold text-light-2'>
+            Defeated
+          </FormLabel>
+          <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent >
+                <SelectItem value={matchData.player1id} >{matchData.player1username}</SelectItem>
+                <SelectItem value={matchData.player2id} >{matchData.player2username}</SelectItem>
+              </SelectContent>
+            </Select>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={form.control}
+      name='loserTrade'
+      render={({ field }) => (
+        <FormItem className='flex w-full flex-col gap-3'>
+          <FormLabel className='text-base-semibold text-light-2'>
+            Loser Trade
+          </FormLabel>
+          <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 w-[180px]'>
+            <Input {...field} type="number"/>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={form.control}
+      name='winnerCastle'
+      render={({ field }) => (
+        <FormItem className='flex w-full flex-col gap-3'>
+          <FormLabel className='text-base-semibold text-light-2'>
+            Winner Castle
+          </FormLabel>
+          <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent >
+                <SelectItem value="Castle" >Castle</SelectItem>
+                <SelectItem value="Conflux">Conflux</SelectItem>
+                <SelectItem value="Cove">Cove</SelectItem>
+                <SelectItem value="Dungeon" >Dungeon</SelectItem>
+                <SelectItem value="Fortress" >Fortress</SelectItem>
+                <SelectItem value="Inferno">Inferno</SelectItem>
+                <SelectItem value="Necropolis" >Necropolis</SelectItem>
+                <SelectItem value="Rampart" >Rampart</SelectItem>
+                <SelectItem value="Stronghold" >Stronghold</SelectItem>
+                <SelectItem value="Tower" >Tower</SelectItem>
+              </SelectContent>
+            </Select>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={form.control}
+      name='loserCastle'
+      render={({ field }) => (
+        <FormItem className='flex w-full flex-col gap-3'>
+          <FormLabel className='text-base-semibold text-light-2'>
+            Loser Castle
+          </FormLabel>
+          <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent >
+                <SelectItem value="Castle" >Castle</SelectItem>
+                <SelectItem value="Conflux">Conflux</SelectItem>
+                <SelectItem value="Cove">Cove</SelectItem>
+                <SelectItem value="Dungeon" >Dungeon</SelectItem>
+                <SelectItem value="Fortress" >Fortress</SelectItem>
+                <SelectItem value="Inferno">Inferno</SelectItem>
+                <SelectItem value="Necropolis" >Necropolis</SelectItem>
+                <SelectItem value="Rampart" >Rampart</SelectItem>
+                <SelectItem value="Stronghold" >Stronghold</SelectItem>
+                <SelectItem value="Tower" >Tower</SelectItem>
+              </SelectContent>
+            </Select>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
           control={form.control}
-          name='winner'
+          name='description'
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                won
+                Description
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-[180px]" >
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                  <SelectContent >
-                    <SelectItem value={matchData.player1id} >{matchData.player1username}</SelectItem>
-                    <SelectItem value={matchData.player2id} >{matchData.player2username}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='winnerTrade'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                winner trade
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field} type="number"/>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='loser'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                defeated
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-[180px]" >
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                  <SelectContent >
-                    <SelectItem value={matchData.player1id} >{matchData.player1username}</SelectItem>
-                    <SelectItem value={matchData.player2id} >{matchData.player2username}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='loserTrade'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                loser trade
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field} type="number"/>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='winnerCastle'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                winner castle
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-[180px]" >
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                  <SelectContent >
-                    <SelectItem value="Castle" >Castle</SelectItem>
-                    <SelectItem value="Conflux">Conflux</SelectItem>
-                    <SelectItem value="Cove">Cove</SelectItem>
-                    <SelectItem value="Dungeon" >Dungeon</SelectItem>
-                    <SelectItem value="Fortress" >Fortress</SelectItem>
-                    <SelectItem value="Inferno">Inferno</SelectItem>
-                    <SelectItem value="Necropolis" >Necropolis</SelectItem>
-                    <SelectItem value="Rampart" >Rampart</SelectItem>
-                    <SelectItem value="Stronghold" >Stronghold</SelectItem>
-                    <SelectItem value="Tower" >Tower</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-                <FormField
-          control={form.control}
-          name='loserCastle'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                loser castle
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-[180px]" >
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                  <SelectContent >
-                    <SelectItem value="Castle" >Castle</SelectItem>
-                    <SelectItem value="Conflux">Conflux</SelectItem>
-                    <SelectItem value="Cove">Cove</SelectItem>
-                    <SelectItem value="Dungeon" >Dungeon</SelectItem>
-                    <SelectItem value="Fortress" >Fortress</SelectItem>
-                    <SelectItem value="Inferno">Inferno</SelectItem>
-                    <SelectItem value="Necropolis" >Necropolis</SelectItem>
-                    <SelectItem value="Rampart" >Rampart</SelectItem>
-                    <SelectItem value="Stronghold" >Stronghold</SelectItem>
-                    <SelectItem value="Tower" >Tower</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Textarea {...field}/>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type='submit' className='bg-primary-500'>
-          add game
-        </Button>
-      </form>
-    </Form>
+    <Button type='submit' className='bg-primary-500'>
+      Add Game
+    </Button>
+  </form>
+</Form>
+
   );
 }
 

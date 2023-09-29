@@ -370,6 +370,7 @@ export async function fetchMatch(matchId: string) {
 
   try {
     const matchQuery = Match.findById(matchId)
+    .lean()
     .populate({
       path: "players",
       model: User,
@@ -379,6 +380,14 @@ export async function fetchMatch(matchId: string) {
       path: "competition",
       model: Competition,
       select: "owner"
+    })
+    .populate({
+      path: "games",
+      populate : {path : "winner", model: User, select: "username"}
+    })
+    .populate({
+      path: "games",
+      populate : {path : "loser", model: User, select: "username"}
     })
 
     const match = await matchQuery.exec()
@@ -401,9 +410,10 @@ interface Params2 {
   competition: string,
   matchNumber: number,
   NoR1Games: number,
+  description: string,
 }
 
-export async function updateMatch({ matchId, winner, loser, winnerCastle, winnerTrade, loserCastle, loserTrade, competition, matchNumber, NoR1Games, path}: Params2) {
+export async function updateMatch({ matchId, winner, loser, winnerCastle, winnerTrade, loserCastle, loserTrade, competition, matchNumber, NoR1Games, description, path}: Params2) {
   connectToDB();
   console.log(matchId)
   try {
@@ -415,28 +425,30 @@ export async function updateMatch({ matchId, winner, loser, winnerCastle, winner
     await Match.findOneAndUpdate({_id: matchId},{
       winner: winner,
       competition: competition,
-      games: {
+      $push: { games: {
         winner: winner,
         loser: loser,
         winnerTrade: winnerTrade,
         winnerCastle: winnerCastle,
         loserTrade: loserTrade,
         loserCastle: loserCastle,
-      }
+        description: description,
+      }}
      })
     }
      else { const nextMatch = await Match.findOneAndUpdate({competition: competition, matchNumber: ((matchNumber + 1)/2) + NoR1Games },{ $push: { players: winner}}) 
      await Match.findOneAndUpdate({id: matchId},{
       winner: winner,
       competition: competition,
-      games: {
+      $push: {games: {
         winner: winner,
         loser: loser,
         winnerTrade: winnerTrade,
         winnerCastle: winnerCastle,
         loserTrade: loserTrade,
         loserCastle: loserCastle,
-      }
+        description: description,
+      }}
      })}
      
   } catch (err) {
