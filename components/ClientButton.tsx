@@ -7,13 +7,14 @@ import { Button } from './ui/button';
 
 interface Props {
     currentUserId: string,
-    competitionId: string
+    competitionId: string,
+    startDate: Date,
 }
 
-export const ClientButton = ({competitionId}: Props) => {
+export const ClientButton = ({competitionId, startDate}: Props) => {
   return (
     <div>
-    <Button onClick={(e) => generateBracket(competitionId)}>
+    <Button onClick={(e) => generateBracket(competitionId, startDate)}>
       generate bracket
     </Button>
     </div>

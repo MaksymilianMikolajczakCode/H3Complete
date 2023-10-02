@@ -7,6 +7,7 @@ import { connectToDB } from "../mongoose";
 import User from "../models/user.model";
 import Competition from "../models/competition.model";
 import Match from "../models/match.model";
+import Round from "../models/round.model";
 
 export async function fetchCompetitions(pageNumber = 1, pageSize = 20) {
   connectToDB();
@@ -248,7 +249,7 @@ export async function fetchCompetitionById(competitionId: string) {
 
 
 
-export async function generateBracket(competitionId: string) {
+export async function generateBracket(competitionId: string, startDate: Date) {
   connectToDB();
 
   try {
@@ -272,7 +273,16 @@ export async function generateBracket(competitionId: string) {
 
       const rounds = Math.log(base)/Math.log(2)
       // const empty = base - competition.players.value
-
+      for (let i =1; i <= rounds; i+=1) {
+        const newDate = new Date(startDate); // Create a new date object
+        newDate.setUTCDate(newDate.getUTCDate() + 7 * i); // Calculate the new date
+        await Round.create({
+          roundNumber: `1/${(base/Math.pow(2,i))}`,
+          competition: competition,
+          bestOf: 1,
+          finishDate: newDate,
+        })
+      } 
 
       // if(empty>0)
       for (let i = 0; i < competition.players.length; i += 2) {
@@ -286,15 +296,15 @@ export async function generateBracket(competitionId: string) {
           competition: competitionId,
           NoR1Games: base/2
         })
-        await Competition.findByIdAndUpdate(competitionId, {
-          $push: { bracket: match },
-        });
+        // await Competition.findByIdAndUpdate(competitionId, {
+        //   $push: { bracket: match },
+        // });
+        await Round.findOneAndUpdate({ competition: competitionId, roundNumber: `1/${(base)}`},{ $push: { matches: match}})
       }
 
       for (let i = 2; i <= rounds; i+=1 ) {
         for (let j = 1; j<= base/(2*i); j+=1) { 
           const previousGames = (base*(1-Math.pow(0.5,(i-1))))
-          console.log(previousGames)
           const matchNumber = previousGames + j
           const match = await Match.create({
             matchNumber: matchNumber,
@@ -302,9 +312,10 @@ export async function generateBracket(competitionId: string) {
             competition: competitionId,
             NoR1Games: base/2
           })
-          await Competition.findByIdAndUpdate(competitionId, {
-            $push: { bracket: match },
-          });
+          // await Competition.findByIdAndUpdate(competitionId, {
+          //   $push: { bracket: match },
+          // });
+          await Round.findOneAndUpdate({ competition: competitionId, roundNumber: `1/${(base/Math.pow(2,i))}`},{ $push: { matches: match}})
         }
       }
   } catch (err) {
@@ -313,7 +324,70 @@ export async function generateBracket(competitionId: string) {
   }
 }
 
+// export async function generateRoundBracket(competitionId: string) {
+//   connectToDB();
 
+//   try {
+//     const competitionQuery = Competition.findById(competitionId)
+//       .populate({
+//         path: "players",
+//         model: User,
+//         select: "image username"
+//       })
+//       const competition = await competitionQuery.exec()
+//       const shuffle = (array: string[]) => { 
+//         for (let i = array.length - 1; i > 0; i--) { 
+//           const j = Math.floor(Math.random() * (i + 1)); 
+//           [array[i], array[j]] = [array[j], array[i]]; 
+//         } 
+//         return array; 
+//       }; 
+//       const shuffledPlayers = shuffle(competition.players)
+//       const  knownBrackets = [2,4,8,16,32,64,128,256,512,1024]
+//       const base = knownBrackets.find(function( base: number) { return base >= competition.players.length})
+
+//       const rounds = Math.log(base)/Math.log(2)
+//       // const empty = base - competition.players.value
+//       const round = 
+
+//       // if(empty>0)
+//       for (let i = 0; i < competition.players.length; i += 2) {
+//         const teamA = shuffledPlayers[i];
+//         const teamB = shuffledPlayers[i + 1];
+//         const matchNumber = (i + 2)/2
+//         const match = await Match.create({
+//           players: [teamA, teamB],
+//           matchNumber: matchNumber,
+//           roundNumber: 1,
+//           competition: competitionId,
+//           NoR1Games: base/2
+//         })
+//         round.matches.push(match) 
+//       }
+
+//       for (let i = 2; i <= rounds; i+=1 ) {
+//         const newRound = await Round.create({
+//           roundNumber: 1/(base/i),
+//           competition: competition,
+//           bestOf: 1
+//         })
+//         for (let j = 1; j<= base/(2*i); j+=1) { 
+//           const previousGames = (base*(1-Math.pow(0.5,(i-1))))
+//           const matchNumber = previousGames + j
+//           const match = await Match.create({
+//             matchNumber: matchNumber,
+//             roundNumber: i,
+//             competition: competitionId,
+//             NoR1Games: base/2
+//           })
+//           newRound.matches.push(match)
+//         }
+//       }
+//   } catch (err) {
+//     console.error("Error while generating competition:", err);
+//     throw new Error("Unable to generate competition");
+//   }
+// }
 
 // chatGPT suggestion 
 // class Match {

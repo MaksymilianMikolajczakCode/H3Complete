@@ -61,6 +61,10 @@ const competitionSchema = new Schema({
     ref: 'Match'
   }],
   image: String,
+  rounds: [{
+    type: Schema.Types.ObjectId,
+    ref: "Round"
+  }]
 });
 
 const Competition = mongoose.models.Competition || mongoose.model("Competition", competitionSchema);

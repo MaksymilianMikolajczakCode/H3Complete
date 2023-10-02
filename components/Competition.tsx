@@ -138,7 +138,7 @@ function Competition({
 
             <div className="mt-4 flex items-center">
               {canGenerate ? (
-                <ClientButton currentUserId={currentUserId} competitionId={id} />
+                <ClientButton currentUserId={currentUserId} competitionId={id} startDate={startDate} />
               ) : alreadyRegistered ? (
                 <div>Already registered</div>
               ) : (
