@@ -56,12 +56,8 @@ const competitionSchema = new Schema({
     type: String,
     enum: ['Swiss', 'League', 'Bracket', 'Basket Bracket']
   },
-  bracket: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Match'
-  }],
   image: String,
-  rounds: [{
+  round: [{
     type: Schema.Types.ObjectId,
     ref: "Round"
   }]

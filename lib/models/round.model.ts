@@ -13,7 +13,7 @@ const roundSchema = new Schema({
   roundNumber: {
     type: String
   },
-  BestOf: {
+  bestOf: {
     type: Number
   },
   competition: {

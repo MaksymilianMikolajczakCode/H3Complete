@@ -9,19 +9,25 @@ interface Props {
     currentUserId: string,
     competitionId: string,
     startDate: Date,
+    path: string
 }
 
-export const ClientButton = ({competitionId, startDate}: Props) => {
+export const ClientButton = ({competitionId, startDate, path}: Props) => {
   return (
     <div>
-    <Button onClick={(e) => generateBracket(competitionId, startDate)}>
+    <Button onClick={(e) => generateBracket(competitionId, startDate, path)}>
       generate bracket
     </Button>
     </div>
   )
 }
 
-export const JoinButton = ({currentUserId, competitionId}: Props) => {
+interface Props2 {
+  currentUserId: string,
+  competitionId: string,
+}
+
+export const JoinButton = ({currentUserId, competitionId}: Props2) => {
   return (
     <div>
       <Button onClick={(e) => JoinCompetition({userId: currentUserId, competitionId})}>

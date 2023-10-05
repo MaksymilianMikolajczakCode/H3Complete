@@ -2,12 +2,12 @@
 import { Button } from "./ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { format } from 'date-fns';
-import { formatDateString } from "@/lib/utils";
+import { format, parseISO } from 'date-fns';
 import {ClientButton, JoinButton} from "./ClientButton";
 import Match from "./Match";
 import Bracket from "./Bracket";
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 // import DeleteThread from "../forms/DeleteThread";
 
 interface Props {
@@ -38,6 +38,33 @@ interface Props {
     }];
     matchNumber: number;
     roundNumber: number;
+  }],
+  round: [{
+    _id: string;
+    finishDate: Date;
+    roundNumber: number;
+    bestOf: number;
+    matches: [{
+      _id: string,
+      games:[{
+        winner: {
+          _id: string,
+          image: string,
+          username: string
+        },
+        winnerTrade: number;
+        loserTrade: number;
+        winnerCastle: string;
+        loserCastle: string;
+      }]
+    }]
+    matchNumber: number;
+    players: [{
+      _id: string,
+      image: string,
+      username: string
+    }];
+    NoR1Games: number;
   }]
 }
 
@@ -53,12 +80,14 @@ function Competition({
   details,
   type,
   bracket,
+  round,
 }: Props) {
+  const pathname = usePathname();
   const arrayOfIds = players.map(obj => obj._id.toString());
   const alreadyRegistered = arrayOfIds.includes(currentUserId.toString())
   const canGenerate = owner._id.toString() == currentUserId.toString()
   const [activeWindow, setActiveWindow] = useState(0);
-  const formattedDate = format(startDate, 'dd-MM-yyyy');
+  const formattedDate = format(parseISO(startDate), 'dd-MM-yyyy');
   return (
     <article className="mx-[10vw] flex w-[80vw] flex-col p-4 shadow-md absolute">
       <div className="w-full">
@@ -101,10 +130,10 @@ function Competition({
         )}
 
         {/* Window 2: Bracket */}
-        {activeWindow === 1 && bracket[0] && (
+        {activeWindow === 1 && round?.length && (
           <div className="mt-4 window">
             {/* Render your bracket component here */}
-            <Bracket bracket={bracket} />
+            <Bracket round={round}/>
           </div>
         )}
 
@@ -137,12 +166,12 @@ function Competition({
             ))}
 
             <div className="mt-4 flex items-center">
-              {canGenerate ? (
-                <ClientButton currentUserId={currentUserId} competitionId={id} startDate={startDate} />
+              {canGenerate  && !round?.length ? (
+                <ClientButton currentUserId={currentUserId} competitionId={id} startDate={startDate} path={pathname}/>
               ) : alreadyRegistered ? (
                 <div>Already registered</div>
               ) : (
-                <JoinButton currentUserId={currentUserId} competitionId={id} />
+                <JoinButton currentUserId={currentUserId} competitionId={id}/>
               )}
             </div>
           </div>

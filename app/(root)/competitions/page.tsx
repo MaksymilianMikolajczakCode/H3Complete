@@ -19,10 +19,12 @@ async function Competitions({
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/onboarding");
 
-  const result = await fetchCompetitions(
+  const serverResult = await fetchCompetitions(
     searchParams.page ? +searchParams.page : 1,
     30
   );
+
+  const result = JSON.parse(JSON.stringify(serverResult));
   return (
     <>
       <section className='mt-9 flex flex-col w-[99vw] gap-10 px-[20vw] mb-10'>
@@ -43,7 +45,7 @@ async function Competitions({
                 startDate={competition.startDate}
                 image={competition.image}
                 players={competition.players.length}
-                bracket={competition.bracket.length}
+                round={competition.round.length}
               />
             ))}
           </>

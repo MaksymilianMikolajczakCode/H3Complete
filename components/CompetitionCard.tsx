@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 
 import { formatDateString } from "@/lib/utils";
@@ -18,7 +18,7 @@ interface Props {
   startDate: Date;
   players: number;
   image: string;
-  bracket: number;
+  round: number;
 }
 
 function CompetitionCard({
@@ -27,10 +27,10 @@ function CompetitionCard({
   owner,
   startDate,
   players,
-  bracket,
+  round,
   image
 }: Props) {
-  const formattedDate = format(startDate, 'dd-MM-yyyy');
+  const formattedDate = format(parseISO(startDate), 'dd-MM-yyyy');
   return (
 <article className="flex flex-col rounded-xl border border-gray-300 p-4 shadow-md">
   <div className="flex items-start justify-between">
@@ -57,7 +57,7 @@ function CompetitionCard({
           </p>
         </Link>
         <div className="text-base flex justify-between">
-          {bracket === 0 ? (
+          {round === 0 ? (
             <div className="text-orange-500">Status: Starts {formattedDate}</div>
           ) : (
             <div className="text-green-500">Status: Ongoing</div>

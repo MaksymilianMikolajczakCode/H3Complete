@@ -50,12 +50,7 @@ body {
 
 /* Style for the bracket container */
 /* Style for the overall bracket container */
-.bracket {
-  display: flex;
-  margin: auto;
-  gap: 32px; /* Increase the gap for spacing between rounds */
-  align-items: stretch; /* Ensure equal height */
-}
+
 
 /* Style for each round in the bracket */
 .bracket-round {
@@ -68,7 +63,7 @@ body {
 }
 
 /* Style for the Match component */
-.Match {
+.match {
   /* Style your Match component as needed */
   height: 80px; /* Adjust match height as needed */
   width: 160px; /* Adjust match width as needed */
@@ -82,14 +77,14 @@ body {
 }
 
 /* Style for the winner match */
-.Match.winner {
+.match.winner {
   background-color: #a1e577; /* Change background color for the winner */
   border: 1px solid #5ab65a; /* Change border color for the winner */
   color: #fff; /* Change text color for the winner */
 }
 
 /* Add hover effect for matches (optional) */
-.Match:hover {
+.match:hover {
   background-color: #e3e3e3;
   cursor: pointer;
 }

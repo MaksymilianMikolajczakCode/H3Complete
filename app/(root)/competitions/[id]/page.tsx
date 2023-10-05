@@ -5,8 +5,6 @@ import Competition from "@/components/Competition";
 
 import { fetchUser } from "@/lib/actions/user.actions";
 import { fetchCompetitionById} from "@/lib/actions/competition.actions";
-import { Button } from "@/components/ui/button";
-
 
 async function page({ params }: { params: { id: string } }) {
   if (!params.id) return null;
@@ -16,23 +14,25 @@ async function page({ params }: { params: { id: string } }) {
 
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/onboarding");
-
+  const plainUserInfo = JSON.parse(JSON.stringify(userInfo))
   const competition = await fetchCompetitionById(params.id);
+  const plainCompetition = JSON.parse(JSON.stringify(competition))
   return (
     <section className='relative'>
       <div>
         <Competition
-                id={competition._id}
-                currentUserId={userInfo._id}
-                title={competition.title}
-                owner={competition.owner}
-                startDate={competition.startDate}
-                players={competition.players}
-                details={competition.details}
-                regulations={competition.regulations}
-                regulationsLink={competition.regulationsLink}
-                type={competition.type}
-                bracket={competition.bracket}
+                id={plainCompetition._id}
+                currentUserId={plainUserInfo._id}
+                title={plainCompetition.title}
+                owner={plainCompetition.owner}
+                startDate={plainCompetition.startDate}
+                players={plainCompetition.players}
+                details={plainCompetition.details}
+                regulations={plainCompetition.regulations}
+                regulationsLink={plainCompetition.regulationsLink}
+                type={plainCompetition.type}
+                bracket={plainCompetition.bracket}
+                round={plainCompetition.round}
               />
       </div>
     </section>

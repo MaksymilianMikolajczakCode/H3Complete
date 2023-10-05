@@ -25,6 +25,9 @@ loserCastle: {
 },
 loserTrade: {
   type: Number
+},
+description: {
+  type: String
 }
 })
 
@@ -51,9 +54,6 @@ const matchSchema = new mongoose.Schema({
       NoR1Games: {
         type: Number
       },
-      description: {
-        type: String
-      }
 });
 
 const Match = mongoose.models.Match || mongoose.model("Match", matchSchema);
