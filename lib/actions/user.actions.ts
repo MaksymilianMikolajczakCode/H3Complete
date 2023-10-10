@@ -17,6 +17,16 @@ export async function fetchUser(userId: string) {
   }
 }
 
+export async function fetchUser2(userId: string) {
+  try {
+    connectToDB();
+
+    return await User.findOne({ _id: userId })
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user: ${error.message}`);
+  }
+}
+
 interface Params {
   userId: string;
   username: string;

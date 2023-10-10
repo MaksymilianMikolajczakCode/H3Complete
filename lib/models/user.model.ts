@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'Competition'
   }],
+  matches: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Match'
+  }]
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

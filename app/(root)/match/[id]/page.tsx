@@ -29,7 +29,9 @@ async function page({ params }: { params: { id: string } }) {
             className="cursor-pointer rounded-full"
           />
           </div>
-          <div><h1 className="text-2xl">{match.players[0].username}</h1></div>
+          <div><h1 className="text-2xl"><Link href={`/profile/${match.player[0]._id}`}>
+            {match.players[0].username}
+          </Link></h1></div>
           <h2>current score: 0</h2>
         </div>
         <div>
@@ -92,10 +94,12 @@ async function page({ params }: { params: { id: string } }) {
             alt="user_image"
             width={200}
             height={200}
-            className="cursor-pointer rounded-full"
+            className="rounded-full"
           />
           </div>
-          <div><h1 className="text-2xl">{match.players[0].username}</h1></div>
+          <div><h1 className="text-2xl"><Link href={`/profile/${match.players[0]._id}`}>
+            {match.players[0].username}
+          </Link></h1></div>
           <h2>current score: 0</h2>
         </div>
         <div>
@@ -113,7 +117,9 @@ async function page({ params }: { params: { id: string } }) {
             className="cursor-pointer rounded-full"
           />
           </div>
-          <div><h1 className="text-2xl">{match.players[1].username}</h1></div>
+          <div><h1 className="text-2xl"><Link href={`/profile/${match.players[1]._id}`}>
+            {match.players[1].username}
+          </Link></h1></div>
           <h2>current score: 0</h2>
         </div>
       </div>

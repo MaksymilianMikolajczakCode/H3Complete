@@ -191,15 +191,6 @@ export async function fetchCompetitionById(competitionId: string) {
         select: "image username"
       })
       .populate({
-        path: "bracket",
-        model: Match,
-        populate : {
-          path: "players",
-          model: User,
-          select: "_id username"
-        }
-      })
-      .populate({
         path: "round",
         model: Round,
         populate: {
