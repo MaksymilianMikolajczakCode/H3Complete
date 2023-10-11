@@ -38,12 +38,15 @@ const Match = ({ id, players, matchNumber, winner }: Props) => {
   // Handle the case when there are more than one player
   <div>
     {players.map((player) => (
-      <div key={player._id}>
-          <div>
-            {player.username}
-          </div>
-      </div>
-    ))}
+  <div key={player._id}>
+    {winner? <div style={{ color: player._id.toString() === winner.toString() ? 'green' : 'red' }}>
+      {player.username}
+    </div>:
+    <div>
+      {player.username}
+    </div>}
+  </div>
+))}
   </div>
 )}
 </div>

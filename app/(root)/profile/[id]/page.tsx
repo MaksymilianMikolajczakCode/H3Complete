@@ -1,10 +1,10 @@
-import Image from "next/image";
 import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
 
 import ProfileHeader from "@/components/ProfileHeader";
 
 import { fetchUser2 } from "@/lib/actions/user.actions";
+import Link from "next/link";
+import Match from "@/components/Match";
 
 async function Page({ params }: { params: { id: string } }) {
   const user = await currentUser();
@@ -20,6 +20,19 @@ async function Page({ params }: { params: { id: string } }) {
         imgUrl={userInfo.image}
         discord={userInfo.discord}
       />
+      {userInfo.matches.map((match) => (
+            <Link href={`/match/${match._id}`} key={match._id}>
+              <div className="match rounded">
+                <Match
+                  id={match._id}
+                  players={match.players}
+                  matchNumber={match.matchNumber}
+                  roundNumber={match.roundNumber}
+                  winner={match.winner}
+                />
+              </div>
+            </Link>
+      ))}
     </section>
   );
 }

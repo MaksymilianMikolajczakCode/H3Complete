@@ -312,7 +312,9 @@ export async function generateBracket(competitionId: string, startDate: Date, pa
           competition: competitionId,
           NoR1Games: base / 2,
         });
-      
+        await User.findOneAndUpdate({_id: teamA._id},{ $push: {matches: match}})
+        await User.findOneAndUpdate({_id: teamB._id},{ $push: {matches: match}})
+
         const roundToUpdate = await Round.findOne({
           competition: competitionId,
           roundNumber: `1/${(base/2)}`,
@@ -614,13 +616,14 @@ export async function updateMatch({
 
   try {
     if (matchNumber % 2 === 0) {
-      await Match.findOneAndUpdate(
+      const newMatch = await Match.findOneAndUpdate(
         { competition: competition, matchNumber: matchNumber / 2 + NoR1Games },
         {
           $push: { players: winner }
         }
       );
 
+      await User.findOneAndUpdate({winner},{ $push: {matches: newMatch}})
       await Match.findOneAndUpdate(
         { _id: matchId },
         {
@@ -646,7 +649,7 @@ export async function updateMatch({
           $push: { players: winner }
         }
       );
-
+      await User.findOneAndUpdate({winner},{ $push: {matches: newMatch}})
       await Match.findOneAndUpdate(
         { _id: matchId },
         {

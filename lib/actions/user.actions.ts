@@ -1,5 +1,5 @@
 "use server";
-
+import Match from "../models/match.model";
 import { FilterQuery, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
 
@@ -22,6 +22,15 @@ export async function fetchUser2(userId: string) {
     connectToDB();
 
     return await User.findOne({ _id: userId })
+    .lean()
+      .populate({
+        path: "matches",
+        model: Match,
+        populate: {
+          path: "players",
+          model: User
+        }
+      })
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
   }

@@ -173,6 +173,7 @@ function Competition({
               ) : (
                 <JoinButton currentUserId={currentUserId} competitionId={id}/>
               )}
+              
             </div>
           </div>
         )}
