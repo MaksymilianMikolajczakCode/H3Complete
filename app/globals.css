@@ -117,6 +117,48 @@ body {
   /* Add styles specific to round 10 here */
 }
 
+.stick {
+  margin-top: 105px;
+      width: 290px;
+      position: fixed;
+      top: 0;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-snap-align: start;
+      height: 90vh;
+}
+
+.stick2 {
+  margin-top: 105px;
+      width: 90wh;
+      position: fixed;
+      top: 0;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-snap-align: start;
+      height: 90vh;
+}
+
+.matches-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Three equal-width columns */
+  gap: 20px; /* Adjust the gap between items as needed */
+}
+
+.match {
+  background: #f5f5f5;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.match:hover {
+  background: #e0e0e0;
+}
+
+
 .flexCenter {
   @apply flex justify-center items-center;
 }

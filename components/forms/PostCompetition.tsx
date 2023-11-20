@@ -92,7 +92,7 @@ function PostCompetition({ userId }: Props) {
       path: pathname
     });
     // console.log(title, owner, details, regulations, regulationsLink, startDate, type)
-    router.push("/");
+    router.push("/competitions");
   };
 
   return (

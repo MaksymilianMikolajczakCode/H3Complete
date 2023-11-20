@@ -108,7 +108,7 @@ function PostTemplate() {
         trade: tiptapTrade,
       path: pathname
     });
-   router.push("/");
+   router.push("/templates");
   };
 
   return (

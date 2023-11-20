@@ -28,8 +28,8 @@ function Template({
     <article
       className={"flex"}
     >
-      <div className="flex-row w-[calc(100vw-252px)] mr-5">
-        <div className="font-bold text-2xl">
+      <div className="flex-row w-[calc(80vw)] mr-5">
+        <div className="font-bold text-2xl mt-12">
           {title}
         </div>
         <div className="mt-3">

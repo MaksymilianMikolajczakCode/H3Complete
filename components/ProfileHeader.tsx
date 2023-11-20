@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-
+import { FaDiscord } from "react-icons/fa"; 
 interface Props {
   accountId: string;
   authUserId: string;
@@ -18,26 +18,33 @@ function ProfileHeader({
   discord,
   type,
 }: Props) {
-  console.log(discord)
   return (
-    <div className='flex w-full flex-col justify-start'>
-      <div className='flex items-center justify-between'>
+    <div className='flex w-full flex-col justify-start m-auto'>
+      <div className='flex items-center m-auto'>
         <div className='flex items-center gap-3'>
-          <div className='relative h-20 w-20 object-cover'>
+          <div className='relative object-cover mt-5'>
             <Image
               src={imgUrl}
               alt='logo'
-              fill
+              width={200}
+              height={200}
               className='rounded-full object-cover shadow-2xl'
             />
           </div>
         </div>
       </div>
-      <div className='flex-1'>
-            <p className='text-base-medium text-gray-1'>{username}</p>
+      <div className='flex-1 m-auto'>
+            <p className='text-2xl text-gray-1 mt-5'>{username}</p>
           </div>
 
-      <p className='mt-6 max-w-lg text-base-regular text-light-2'><Link href={`${discord}`}>Discord</Link></p>
+          {discord? <p className="mt-6 max-w-lg  text-xl text-base-regular text-light-2 m-auto">
+  <Link href={discord}>
+    <span className="text-blue-500 hover:text-blue-600" style={{ display: "inline-flex", alignItems: "center" }}>
+      <FaDiscord size={32} style={{ marginRight: "8px" }} />My Discord
+    </span>
+  </Link>
+</p> : <span></span>}
+
 
       <div className='mt-12 h-0.5 w-full bg-dark-3' />
     </div>

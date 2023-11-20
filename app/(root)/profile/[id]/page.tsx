@@ -13,27 +13,30 @@ async function Page({ params }: { params: { id: string } }) {
   const userInfo = await fetchUser2(params.id);
   return (
     <section>
-      <ProfileHeader
-        accountId={userInfo._id}
-        authUserId={user.id}
-        username={userInfo.username}
-        imgUrl={userInfo.image}
-        discord={userInfo.discord}
-      />
-      {userInfo.matches.map((match) => (
-            <Link href={`/match/${match._id}`} key={match._id}>
-              <div className="match rounded">
-                <Match
-                  id={match._id}
-                  players={match.players}
-                  matchNumber={match.matchNumber}
-                  roundNumber={match.roundNumber}
-                  winner={match.winner}
-                />
-              </div>
-            </Link>
-      ))}
-    </section>
+  <ProfileHeader
+    accountId={userInfo._id}
+    authUserId={user.id}
+    username={userInfo.username}
+    imgUrl={userInfo.image}
+    discord={userInfo.discord}
+  />
+  <div className="matches-grid">
+    {userInfo.matches.map((match) => (
+      <Link href={`/match/${match._id}`} key={match._id}>
+        <div className="match rounded m-auto">
+          <Match
+            id={match._id}
+            players={match.players}
+            matchNumber={match.matchNumber}
+            roundNumber={match.roundNumber}
+            winner={match.winner}
+          />
+        </div>
+      </Link>
+    ))}
+  </div>
+</section>
+
   );
 }
 export default Page;

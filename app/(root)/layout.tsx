@@ -14,11 +14,13 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body>
+          <div className='fixed w-full'>
           <Topbar/>
+          </div>
 
           <main>
-            <section className='main-container'>
-              <div className='w-full'>
+            <section>
+              <div className='w-full stick2'>
                 {children}
               </div>
             </section>
