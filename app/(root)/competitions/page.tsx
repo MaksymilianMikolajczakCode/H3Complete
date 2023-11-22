@@ -28,8 +28,8 @@ async function Competitions({
   return (
     <>
       <section className='mt-9 flex flex-col w-[99vw] gap-10 px-[20vw] mb-10'>
-        <Link href="/create-competition">
-          Add Competition
+        <Link href="/create-competition" className='bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded text-center'>
+          New Competition
         </Link>
         {result.competitions.length === 0 ? (
           <p className='no-result'>No threads found</p>

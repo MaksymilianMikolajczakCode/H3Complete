@@ -98,7 +98,7 @@ function PostCompetition({ userId }: Props) {
   return (
     <Form {...form}>
       <form
-        className='mt-10 mx-[calc(10vw)] w-[calc(80vw)] flex flex-col justify-start gap-10'
+        className='mt-10 mx-[calc(10vw)] w-[calc(80vw)] flex flex-col justify-start gap-10 mb-6'
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
@@ -270,9 +270,9 @@ function PostCompetition({ userId }: Props) {
           )}
         /> */}
 
-        <Button type='submit' className='bg-primary-500'>
-          Post Competition
-        </Button>
+<button type='submit' className='bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded'>
+        Post Competition
+    </button>
       </form>
     </Form>
   );

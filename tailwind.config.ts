@@ -15,6 +15,8 @@ module.exports = {
         'light-white-300': '#F3F3F4',
         'light-white-400': '#E2E5F1',
         'light-white-500': '#E4E4E4',
+        'primary-500' : '#047fc3',
+        'primary-600' : '#036BA3',
         gray: '#4D4A4A',
         'gray-100': '#3d3d4e',
         'black-100': '#252525',

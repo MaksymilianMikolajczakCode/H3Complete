@@ -99,7 +99,7 @@ function Competition({
             <button
               onClick={() => setActiveWindow(0)}
               className={`${
-                activeWindow === 0 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+                activeWindow === 0 ? 'bg-primary-500 text-white' : 'bg-gray-200 text-gray-700'
               } px-4 py-2 rounded flex-grow`}
             >
               Info
@@ -107,7 +107,7 @@ function Competition({
             <button
               onClick={() => setActiveWindow(2)}
               className={`${
-                activeWindow === 2 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+                activeWindow === 2 ? 'bg-primary-500 text-white' : 'bg-gray-200 text-gray-700'
               } px-4 py-2 rounded flex-grow`}
             >
               Regulations
@@ -115,7 +115,7 @@ function Competition({
             <button
               onClick={() => setActiveWindow(1)}
               className={`${
-                activeWindow === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+                activeWindow === 1 ? 'bg-primary-500 text-white' : 'bg-gray-200 text-gray-700'
               } px-4 py-2 rounded flex-grow`}
             >
               Bracket

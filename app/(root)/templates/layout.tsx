@@ -18,8 +18,8 @@ async function TemplatesLayout({
           {template.title}
         </Link>
       ))}
-      <Link href="/create-template">
-        Add Template
+      <Link href="/create-template" className='bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded text-center mr-3'>
+        New Template
       </Link>
     </div>
   

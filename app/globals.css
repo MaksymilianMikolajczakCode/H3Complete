@@ -118,25 +118,22 @@ body {
 }
 
 .stick {
-  margin-top: 105px;
-      width: 290px;
+      width: 250px;
       position: fixed;
-      top: 0;
+      top: 110px;
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
       scroll-snap-align: start;
-      height: 90vh;
+      height: calc(100vh - 135px);
 }
 
 .stick2 {
-  margin-top: 105px;
-      width: 90wh;
       position: fixed;
-      top: 0;
+      top: 110px;
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
       scroll-snap-align: start;
-      height: 90vh;
+      height: calc(100vh - 110px);
 }
 
 .matches-grid {
