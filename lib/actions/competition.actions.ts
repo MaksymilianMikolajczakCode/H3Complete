@@ -39,7 +39,7 @@ export async function fetchCompetitions(pageNumber = 1, pageSize = 20) {
   }); // Get the total count of posts
 
   const competitions = await competitionsQuery.exec();
-
+  const reversed = competitions.reverse()
   const isNext = totalCompetitionsCount > skipAmount + competitions.length;
 
   return { competitions, isNext };
