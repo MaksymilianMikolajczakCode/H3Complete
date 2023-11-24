@@ -76,6 +76,7 @@ function PostCompetition({ userId }: Props) {
       details: "",
       regulations: "",
       regulationsLink: "",
+      image: "",
     },
   });
 
@@ -133,7 +134,7 @@ function PostCompetition({ userId }: Props) {
                 <Input
                   type='file'
                   accept='image/*'
-                  placeholder='Add profile photo'
+                  placeholder='Add competition logo'
                   className='account-form_image-input'
                   onChange={(e) => handleImage(e, field.onChange)}
                 />
