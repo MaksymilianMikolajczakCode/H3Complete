@@ -135,7 +135,7 @@ function Tiptap({ content, onChange }) {
     // Update the content whenever Tiptap content changes
     useEffect(() => {
       onChange(editor?.getHTML()); // Get the HTML content from Tiptap
-    }, [editor, onChange]);
+    }, [editor, onChange, content]);
   
     return (
       <div>

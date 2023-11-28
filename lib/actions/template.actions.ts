@@ -4,8 +4,6 @@ import { revalidatePath } from "next/cache";
 
 import { connectToDB } from "../mongoose";
 
-import User from "../models/user.model";
-import Competition from "../models/competition.model";
 import Template from "../models/template.model";
 
 
@@ -49,9 +47,7 @@ export async function createTemplate({ title, image, description, settings, down
     export async function fetchTemplates() {
       connectToDB();
 
-      const templatesQuery = Template.find()
-
-      const templates = await templatesQuery.exec();
+      const templates = await Template.find()
 
       return { templates };
     }
@@ -60,7 +56,7 @@ export async function createTemplate({ title, image, description, settings, down
       connectToDB();
     
       try {
-        const templateQuery = Template.findById(templateId)
+        const templateQuery = Template.findById(templateId).lean()
 
         const template = await templateQuery.exec()
         return template;
@@ -69,3 +65,28 @@ export async function createTemplate({ title, image, description, settings, down
         throw new Error("Unable to fetch template");
       }
     }
+
+
+interface Params2 {
+    version: string,
+    image: string,
+    changes: string,
+    // creator: String | undefined,
+    download: string,
+    path: string,
+    templateId: string
+  }
+
+    export async function createVersion({ version, image, changes, download, templateId, path}: Params2
+      ) {
+        try {
+          connectToDB();
+              await Template.findByIdAndUpdate(templateId, {
+                $push: { version: {version: version, image:image, changes:changes, download:download} },
+              });
+          revalidatePath(path);
+        } catch (error: any) {
+          throw new Error(`Failed to create template: ${error.message}`);
+        }
+      }
+  

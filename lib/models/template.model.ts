@@ -12,6 +12,10 @@ const subSchema = new Schema({
       required: true,
   },
   image: String,
+  download: {
+    type: String,
+    required: true,
+  }
 })
 
 

@@ -1,6 +1,10 @@
+'use client'
+
 import Image from "next/legacy/image";
 import Link from "next/link";
-
+import { useState } from "react";
+import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "../components/ui/select";
+import { Value } from "@radix-ui/react-select";
 // import DeleteThread from "../forms/DeleteThread";
 
 interface Props {
@@ -13,6 +17,14 @@ interface Props {
     // creator: String | undefined,
     trade: string,
     download: string | undefined,
+    templateId: string,
+    versions:[{
+      version: string,
+      image: string,
+      download: string,
+      changes: string,
+      //creator: string | undefined,
+    }]
   }
 function Template({
   title,
@@ -23,14 +35,42 @@ function Template({
   specification,
   trade,
   download,
+  templateId,
+  versions,
 }: Props) {
+  const [activeWindow, setActiveWindow] = useState("start");
+  const handleSelectChange = (value: string) => {
+    setActiveWindow(value);
+  };
   return (
     <article
       className={"flex"}
     >
-      <div className="flex-row w-[calc(80vw)] mr-5">
-        <div className="font-bold text-2xl mt-12">
-          {title}
+      <div className="flex w-full mr-5">
+      {activeWindow === "start" && 
+      <div>
+      <div className="mt-12 flex justify-between items-center">
+          <span className="font-bold text-2xl ">{title}</span>
+          <div className="flex items-center">
+          <span className="mr-2">
+              <Select onValueChange={handleSelectChange}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={title} />
+              </SelectTrigger>
+              <SelectContent >
+                <SelectItem value={"start"} >{title}</SelectItem>
+                {versions?.map((version, index) => (
+                  <SelectItem value={index.toString()}>{version.version}</SelectItem>
+                ) )}
+              </SelectContent>
+            </Select>
+          </span>
+          <span >
+          <Link href={`/create-version/${templateId}`} className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded">
+             Add New Version
+            </Link>
+          </span>
+          </div>
         </div>
         <div className="mt-3">
           <h2 className="font-semibold text-lg whitespace-pre-line">Description</h2>
@@ -68,34 +108,65 @@ function Template({
         <h2 className="font-semibold text-lg whitespace-pre-line">Trade</h2>
         <div className="prose"><div dangerouslySetInnerHTML={{ __html: trade }}className="w-[calc(100vw-252px)]" /></div>
         </div>
-      </div>
-      {/* <div className='flex items-start justify-between'>
-        <div className='flex w-full flex-1 flex-row gap-4'>
-          <div className='flex flex-col items-center'>
-            <Link href={`/profile/${owner.id}`} className='relative h-11 w-11'>
+      </div>}
+      {versions?.map((version, index) => (
+        version && activeWindow === index.toString() && (
+          <div key={index} className="w-full">
+            <div className="mt-12 flex justify-between items-center">
+              <span className="font-bold text-2xl">{version.version}</span>
+              <div className="flex items-center">
+                <span className="mr-2">
+                  <Select onValueChange={handleSelectChange}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder={version.version} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="start">{title}</SelectItem>
+                      {versions?.map((v, idx) => (
+                        <SelectItem key={idx} value={idx.toString()}>
+                          {v.version}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </span>
+                <span>
+                  <Link href={`/create-version/${templateId}`} className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded">
+                    Add New Version
+                  </Link>
+                </span>
+              </div>
+            </div>
+            <div className="mt-1">
+              <h2 className="font-semibold text-lg">Graph</h2>
               <Image
-                src={owner.image}
-                alt='user_image'
-                fill
-                className='cursor-pointer rounded-full'
+                src={version.image}
+                alt="profile_icon"
+                width={1000}
+                height={500}
+                layout="responsive"
+                priority
               />
-            </Link>
-
-            <div className='thread-card_bar' />
+            </div>
+            <div className="mt-1">
+              <h2 className="font-semibold text-lg whitespace-pre-line">Changes</h2>
+              <div className="prose">
+                <div dangerouslySetInnerHTML={{ __html: version.changes }} className="w-[calc(100vw-252px)]" />
+              </div>
+            </div>
+            <div className="text-sky-500 mt-1">
+              {download ? (
+                <Link href={version.download}>
+                  Download {title}
+                </Link>
+              ) : (
+                <span></span>
+              )}
+            </div>
           </div>
-
-          <div className='flex w-full flex-col'>
-            <Link href={`/profile/${owner.id}`} className='w-fit'>
-              <h4 className='cursor-pointer text-base-semibold text-light-1'>
-                {owner.username}
-              </h4>
-            </Link>
-            <Link href={`competitions/${id}`}>
-                <p className='mt-2 text-small-regular text-light-2'>{title}</p>
-            </Link>
-          </div>
-        </div>
-      </div> */}
+        )
+      ))}
+      </div>
     </article>
   );
 }

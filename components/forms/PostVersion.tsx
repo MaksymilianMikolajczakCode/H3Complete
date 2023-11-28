@@ -4,10 +4,6 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
-import { cn } from "@/lib/utils"
-import { Calendar as CalendarIcon } from "lucide-react"
-import { format } from "date-fns"
-
 
 import {
   Form,
@@ -20,32 +16,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
+import { useUploadThing } from "@/lib/uploadthing";
+import { isBase64Image } from "@/lib/utils";
+
+
 import { VersionValidation } from "@/lib/validations/version";
 import { createVersion } from "@/lib/actions/template.actions";
 import { Input } from "../ui/input";
-import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "../ui/select";
-import { Calendar } from "../ui/calendar";
-import { ChangeEvent, useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { ChangeEvent, useEffect, useState } from "react";
 import Tiptap from "../Tiptap";
 
 interface Props {
   userId: string;
+  templateId: string;
 }
 
-function PostVersion({ userId }: Props) {
-  const [tiptapContent, setTiptapContent] = useState(`<p>Some text here</p>
-  <ul>
-    <li><strong>Bullet list item 1</strong></li>
-    <li>Bullet list item 2</li>
-  </ul>
-  <ol>
-    <li>Ordered list item 1</li>
-    <li>Ordered list item 2</li>
-  </ol>`);
-  const [startDate, setStartDate] = useState<Date | undefined>(new Date())
+function PostVersion({ userId, templateId }: Props) {
   const router = useRouter();
   const pathname = usePathname();
+  const [tiptapChanges, setTiptapChanges] = useState('');
+  useEffect(() => {
+    setTiptapChanges(tiptapChanges); // Update the state when tiptapChanges changes
+  }, [tiptapChanges]);
+  
+  
   const [files, setFiles] = useState<File[]>([]);
   const handleImage = (
     e: ChangeEvent<HTMLInputElement>,
@@ -72,29 +66,27 @@ function PostVersion({ userId }: Props) {
   const form = useForm<z.infer<typeof VersionValidation>>({
     resolver: zodResolver(VersionValidation),
     defaultValues: {
-      title: "",
-      details: "",
-      regulations: "",
-      regulationsLink: "",
+      version: "",
+      changes: "",
       image: "",
+      download: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof VersionValidation>) => {
+
     await createVersion({
-      title: values.title,
-      owner: userId,
-      details: values.details,
-      regulations: tiptapContent,
-      regulationsLink: values.regulationsLink,
-      startDate: values.startDate,
-      // type: values.type,
+      version: values.version,
+      templateId: templateId,
+      changes: tiptapChanges, // Use the most recent value
       image: values.image,
+      download: values.download,
       path: pathname
     });
-    // console.log(title, owner, details, regulations, regulationsLink, startDate, type)
-    router.push("/Versions");
+  
+    router.push(`/templates/${templateId}`);
   };
+  
 
   return (
     <Form {...form}>
@@ -102,6 +94,21 @@ function PostVersion({ userId }: Props) {
         className='mt-10 mx-[calc(10vw)] w-[calc(80vw)] flex flex-col justify-start gap-10 mb-6'
         onSubmit={form.handleSubmit(onSubmit)}
       >
+        <FormField
+          control={form.control}
+          name='version'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+                Version
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+                <Input {...field}/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name='image'
@@ -144,11 +151,11 @@ function PostVersion({ userId }: Props) {
         />
         <FormField
           control={form.control}
-          name='title'
+          name='download'
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Title
+                download
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
                 <Input {...field}/>
@@ -159,118 +166,19 @@ function PostVersion({ userId }: Props) {
         />
         <FormField
           control={form.control}
-          name='details'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                Details
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Textarea rows={10} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name='regulations'
+          name='changes'
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3 prose'>
               <FormLabel className='text-base-semibold text-light-2'>
-                regulations
+                Changes
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Tiptap content={tiptapContent} onChange={(newContent) => setTiptapContent(newContent)} />
+              <Tiptap content={tiptapChanges} onChange={(newContent: string) => { setTiptapChanges(newContent) }} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name='regulationsLink'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                Link to regulations
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='startDate'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                start date
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* <FormField
-          control={form.control}
-          name='type'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                type of Version
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-[180px]" >
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                  <SelectContent >
-                    <SelectItem value="Swiss" >Swiss</SelectItem>
-                    <SelectItem value="League">League</SelectItem>
-                    <SelectItem value="Bracket">Bracket</SelectItem>
-                    <SelectItem value="Basket Bracket">Basket Bracket</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
-
 <button type='submit' className='bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded'>
         Post Version
     </button>
