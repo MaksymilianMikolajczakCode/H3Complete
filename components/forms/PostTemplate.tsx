@@ -30,18 +30,6 @@ import Tiptap from "../Tiptap";
 function PostTemplate() {
   const router = useRouter();
   const pathname = usePathname();
-  const [tiptapRules, setTiptapRules] = useState('')
-  const [tiptapSpecification, setTiptapSpecification] = useState(`<p>Some text here</p>
-  <ul>
-    <li><strong>Bullet list item 1</strong></li>
-    <li>Bullet list item 2</li>
-  </ul>
-  <ol>
-    <li>Ordered list item 1</li>
-    <li>Ordered list item 2</li>
-  </ol>`)
-  const [tiptapSettings, setTiptapSettings] = useState('')
-  const [tiptapTrade, setTiptapTrade] = useState('')
   const { startUpload } = useUploadThing("media");
   const [files, setFiles] = useState<File[]>([]);
   const handleImage = (
@@ -99,12 +87,12 @@ function PostTemplate() {
         title: values.title,
         download: values.download,
         description: values.description,
-        specification: tiptapSpecification,
+        specification: values.specification,
         // creator: values.creator,
-        settings: tiptapSettings,
-        rules: tiptapRules,
+        settings: values.settings,
+        rules: values.rules,
         image: values.image,
-        trade: tiptapTrade,
+        trade: values.trade,
       path: pathname
     });
    router.push("/templates");
@@ -196,7 +184,7 @@ function PostTemplate() {
                 specification
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Tiptap content={tiptapSpecification} onChange={(newContent) => setTiptapSpecification(newContent)} />
+                <Tiptap content={field.name} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -211,7 +199,7 @@ function PostTemplate() {
                 rules
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Tiptap content={tiptapRules} onChange={(newContent) => setTiptapRules(newContent)} />
+                <Tiptap content={field.name} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -226,7 +214,7 @@ function PostTemplate() {
                 settings
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Tiptap content={tiptapSettings} onChange={(newContent) => setTiptapSettings(newContent)} />
+                <Tiptap content={field.name} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -256,7 +244,7 @@ function PostTemplate() {
                 Trade
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Tiptap content={tiptapTrade} onChange={(newContent) => setTiptapTrade(newContent)} />
+                <Tiptap content={field.name} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>

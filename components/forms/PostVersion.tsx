@@ -34,12 +34,11 @@ interface Props {
 function PostVersion({ userId, templateId }: Props) {
   const router = useRouter();
   const pathname = usePathname();
-  const [tiptapChanges, setTiptapChanges] = useState('');
-  useEffect(() => {
-    setTiptapChanges(tiptapChanges); // Update the state when tiptapChanges changes
-  }, [tiptapChanges]);
-  
-  
+  // const [tiptapChanges, setTiptapChanges] = useState('');
+  // const handleTiptapChange = (newContent) => {
+  //   setTiptapChanges(newContent);
+  //   console.log(newContent)
+  // };
   const [files, setFiles] = useState<File[]>([]);
   const handleImage = (
     e: ChangeEvent<HTMLInputElement>,
@@ -78,7 +77,7 @@ function PostVersion({ userId, templateId }: Props) {
     await createVersion({
       version: values.version,
       templateId: templateId,
-      changes: tiptapChanges, // Use the most recent value
+      changes: values.changes, // Use the most recent value
       image: values.image,
       download: values.download,
       path: pathname
@@ -173,7 +172,7 @@ function PostVersion({ userId, templateId }: Props) {
                 Changes
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-              <Tiptap content={tiptapChanges} onChange={(newContent: string) => { setTiptapChanges(newContent) }} />
+                <Tiptap content={field.name} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>

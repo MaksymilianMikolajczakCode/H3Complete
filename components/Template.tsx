@@ -87,14 +87,15 @@ function Template({
         </div>
         <div className="mt-1">
         <h2 className="font-semibold text-lg">Graph</h2>
+          {image?.length > 0 && 
           <Image
-            src={image}
-            alt='profile_icon'
-            width={1000}
-            height={500}
-            layout="responsive"
-            priority
-          />
+          src={image}
+          alt='profile_icon'
+          width={1000}
+          height={500}
+          layout="responsive"
+          priority
+        />}
         </div>
         <div className="mt-1 whitespace-pre-line">
           <h2 className="font-semibold text-lg">Specification</h2>
@@ -138,15 +139,17 @@ function Template({
               </div>
             </div>
             <div className="mt-1">
-              <h2 className="font-semibold text-lg">Graph</h2>
+              {version.image.length > 0 && 
+              <div>
+                <h2 className="font-semibold text-lg">Graph</h2>
               <Image
-                src={version.image}
-                alt="profile_icon"
-                width={1000}
-                height={500}
-                layout="responsive"
-                priority
-              />
+              src={version.image}
+              alt="profile_icon"
+              width={1000}
+              height={500}
+              layout="responsive"
+              priority
+            /></div>}
             </div>
             <div className="mt-1">
               <h2 className="font-semibold text-lg whitespace-pre-line">Changes</h2>
@@ -155,9 +158,9 @@ function Template({
               </div>
             </div>
             <div className="text-sky-500 mt-1">
-              {download ? (
+              {version.download ? (
                 <Link href={version.download}>
-                  Download {title}
+                  Download {version.version}
                 </Link>
               ) : (
                 <span></span>

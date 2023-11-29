@@ -34,15 +34,6 @@ interface Props {
 }
 
 function PostCompetition({ userId }: Props) {
-  const [tiptapContent, setTiptapContent] = useState(`<p>Some text here</p>
-  <ul>
-    <li><strong>Bullet list item 1</strong></li>
-    <li>Bullet list item 2</li>
-  </ul>
-  <ol>
-    <li>Ordered list item 1</li>
-    <li>Ordered list item 2</li>
-  </ol>`);
   const [startDate, setStartDate] = useState<Date | undefined>(new Date())
   const router = useRouter();
   const pathname = usePathname();
@@ -85,7 +76,7 @@ function PostCompetition({ userId }: Props) {
       title: values.title,
       owner: userId,
       details: values.details,
-      regulations: tiptapContent,
+      regulations: values.regulations,
       regulationsLink: values.regulationsLink,
       startDate: values.startDate,
       // type: values.type,
@@ -182,7 +173,7 @@ function PostCompetition({ userId }: Props) {
                 regulations
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Tiptap content={tiptapContent} onChange={(newContent) => setTiptapContent(newContent)} />
+                <Tiptap content={field.name} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>

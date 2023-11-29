@@ -121,6 +121,9 @@ const MenuBar = ({ editor }) => {
 
 function Tiptap({ content, onChange }) {
     const editor = useEditor({
+      onUpdate({ editor }) {
+        onChange(editor?.getHTML());
+      },
       extensions: [StarterKit, BulletList],
   
       content: content, // Initialize the editor with the passed content
@@ -133,10 +136,9 @@ function Tiptap({ content, onChange }) {
       },
     });
     // Update the content whenever Tiptap content changes
-    useEffect(() => {
-      onChange(editor?.getHTML()); // Get the HTML content from Tiptap
-    }, [editor, onChange, content]);
-  
+    // useEffect(() => {
+    //   onChange(editor?.getHTML()); // Get the HTML content from Tiptap
+    // }, [ ,editor, onChange, content]);
     return (
       <div>
         <MenuBar editor={editor}/>
