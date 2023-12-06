@@ -7,19 +7,23 @@
   <p><a href="https://h3-complete.vercel.app">h3-complete.vercel.app</a></p>
   <p>Testing Account - Email: testh3@wp.pl Password: aksreywtt2</p>
 
-  <h2>Dependencies</h2>
+  <h2>Tech used</h2>
   <ul>
     <li>tailwindcss</li>
     <li>zod</li>
     <li>typescript</li>
     <li>react</li>
     <li>mongoose</li>
-    <li>next</li>
+    <li>next.js</li>
     <li>uploadthing</li>
     <li>tiptap</li>
     <li>clerk</li>
     <li>shadcn</li>
-    <li>react-hook-form</li>
+    <li>node.js</li>
+    <li>javascript</li>
+    <li>html5</li>
+    <li>css</li>
+    <li>mongodb</li>
   </ul>
 
   <h2>Features</h2>
