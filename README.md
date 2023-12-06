@@ -4,23 +4,23 @@
 <body>
   <h1>Project Name: H3Complete</h1>
   <h2>Live Website</h2>
-    <url>h3-complete.vercel.app</url>
-    testing accout - email: testh3@wp.pl password: aksreywtt2
+  <p><a href="https://h3-complete.vercel.app">h3-complete.vercel.app</a></p>
+  <p>Testing Account - Email: testh3@wp.pl Password: aksreywtt2</p>
 
-      <h2>Dependencies</h2>
-    <ul>
-        <li>tailwindcss</li>
-        <li>zod</li>
-        <li>typescript</li>
-        <li>react</li>
-        <li>mongoose</li>
-        <li>next</li>
-        <li>uploadthing</li>
-        <li>tiptap</li>
-        <li>clerk</li>
-        <li>shadcn</li>
-        <li>react-hook-form</li>
-    </ul>
+  <h2>Dependencies</h2>
+  <ul>
+    <li>tailwindcss</li>
+    <li>zod</li>
+    <li>typescript</li>
+    <li>react</li>
+    <li>mongoose</li>
+    <li>next</li>
+    <li>uploadthing</li>
+    <li>tiptap</li>
+    <li>clerk</li>
+    <li>shadcn</li>
+    <li>react-hook-form</li>
+  </ul>
 
   <h2>Features</h2>
   <ul>
@@ -32,6 +32,10 @@
     <li><strong>User Profile Customization:</strong> Empowers users to personalize their profiles with avatars, bios, or profile themes.</li>
     <li><strong>More incoming.</li>
   </ul>
+</body>
+
+</html>
+
 
 </body>
 
