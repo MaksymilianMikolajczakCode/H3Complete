@@ -83,7 +83,7 @@ function Template({
         </div>
         <div className="mt-1 whitespace-pre-line">
         <h2 className="font-semibold text-lg">Settings</h2>
-        <div className="prose"><div dangerouslySetInnerHTML={{ __html: settings }} className="w-[calc(100vw-252px)]"/></div>
+        <div className="prose max-w-screen-2xl"><div dangerouslySetInnerHTML={{ __html: settings }} /></div>
         </div>
         <div className="mt-1">
         <h2 className="font-semibold text-lg">Graph</h2>
@@ -91,23 +91,23 @@ function Template({
           <Image
           src={image}
           alt='profile_icon'
-          width={1000}
-          height={500}
+          width={600}
+          height={400}
           layout="responsive"
           priority
         />}
         </div>
         <div className="mt-1 whitespace-pre-line">
           <h2 className="font-semibold text-lg">Specification</h2>
-        <div className="prose"><div dangerouslySetInnerHTML={{ __html: specification }} className="w-[calc(100vw-252px)]"/></div>
+        <div className="prose max-w-screen-2xl"><div dangerouslySetInnerHTML={{ __html: specification }} /></div>
         </div>
         <div className="mt-1">
         <h2 className="font-semibold text-lg whitespace-pre-line">Rules</h2>
-        <div className="prose"><div dangerouslySetInnerHTML={{ __html: rules }} className="w-[calc(100vw-252px)]"/></div>
+        <div className="prose max-w-screen-2xl"><div dangerouslySetInnerHTML={{ __html: rules }} /></div>
         </div>
         <div className="mt-1">
         <h2 className="font-semibold text-lg whitespace-pre-line">Trade</h2>
-        <div className="prose"><div dangerouslySetInnerHTML={{ __html: trade }}className="w-[calc(100vw-252px)]" /></div>
+        <div className="prose max-w-screen-2xl "><div dangerouslySetInnerHTML={{ __html: trade }} /></div>
         </div>
       </div>}
       {versions?.map((version, index) => (
@@ -153,8 +153,8 @@ function Template({
             </div>
             <div className="mt-1">
               <h2 className="font-semibold text-lg whitespace-pre-line">Changes</h2>
-              <div className="prose">
-                <div dangerouslySetInnerHTML={{ __html: version.changes }} className="w-[calc(100vw-252px)]" />
+              <div className="prose max-w-screen-2xl">
+                <div dangerouslySetInnerHTML={{ __html: version.changes }}  />
               </div>
             </div>
             <div className="text-sky-500 mt-1">
