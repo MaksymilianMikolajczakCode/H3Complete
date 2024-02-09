@@ -4,8 +4,7 @@
 <body>
   <h1>Project Name: H3Complete</h1>
   <h2>Live Website</h2>
-  <p><a href="https://h3-complete.vercel.app">h3-complete.vercel.app</a></p>
-  <p>Testing Account - Email: testh3@wp.pl Password: aksreywtt2</p>
+  <p>Under Construction</p>
 
   <h2>Tech used</h2>
   <ul>
@@ -23,7 +22,7 @@
     <li>javascript</li>
     <li>html5</li>
     <li>css</li>
-    <li>mongodb</li>
+    <li>postgreSQL</li>
   </ul>
 
   <h2>Features</h2>
