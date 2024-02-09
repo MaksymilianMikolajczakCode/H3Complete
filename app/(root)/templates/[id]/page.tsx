@@ -9,21 +9,21 @@ import { Button } from "@/components/ui/button";
 async function page({ params }: { params: { id: string } }) {
   if (!params.id) return null;
 
-  const template = await fetchTemplateById(params.id);
+  const result = await fetchTemplateById(params.id);
   return (
     <section>
       <div>
         <Template
-                title={template.title}
-                description={template.description}
-                download={template.download}
-                settings={template.settings}
-                rules={template.rules}
-                specification={template.specification}
-                trade={template.trade}
-                image={template.image}
+                title={result.template.title}
+                description={result.template.description}
+                download={result.template.download}
+                settings={result.template.settings}
+                rules={result.template.rules}
+                specification={result.template.specification}
+                trade={result.template.trade}
+                image={result.template.image}
                 templateId={params.id}
-                versions={template.version}
+                versions={result.templateVersions}
               />
       </div>
     </section>

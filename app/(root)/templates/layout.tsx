@@ -10,9 +10,9 @@ async function TemplatesLayout({
   return (
     <section className='flex flex-row w-[calc(100vw-30px)] overflow-x-hidden'>
     <div className="mt-5 w-80 max-w-xs flex flex-col gap-5 m-3 stick">
-      {result.templates.map((template) => (
+      {result.map((template) => (
         <Link 
-          href={`/templates/${template._id}`}
+          href={`/templates/${template.id}`}
           key={template._id}
         >
           {template.title}

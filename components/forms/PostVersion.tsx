@@ -27,11 +27,10 @@ import { ChangeEvent, useEffect, useState } from "react";
 import Tiptap from "../Tiptap";
 
 interface Props {
-  userId: string;
   templateId: string;
 }
 
-function PostVersion({ userId, templateId }: Props) {
+function PostVersion({ templateId }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   // const [tiptapChanges, setTiptapChanges] = useState('');
@@ -76,7 +75,7 @@ function PostVersion({ userId, templateId }: Props) {
 
     await createVersion({
       version: values.version,
-      templateId: templateId,
+      template_id: templateId,
       changes: values.changes, // Use the most recent value
       image: values.image,
       download: values.download,

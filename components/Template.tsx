@@ -38,6 +38,7 @@ function Template({
   templateId,
   versions,
 }: Props) {
+  console.log(versions)
   const [activeWindow, setActiveWindow] = useState("start");
   const handleSelectChange = (value: string) => {
     setActiveWindow(value);
