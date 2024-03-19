@@ -44,12 +44,12 @@ import { IoMdPerson } from "react-icons/io";
     ))}
 </div>
           <div className='ml-10 flex justify-end gap-4 margin-left: auto m-1'>
-              {user? <div>
+              {user? <div className='flex flex-row'>
                 <SignedIn>
-                <SignOutButton>
-                  <h1>log</h1>
-                </SignOutButton>
               <OrganizationSwitcher />
+              <SignOutButton>
+                  <h1 className='text-main items-center m-1 cursor-pointer'>logout</h1>
+                </SignOutButton>
             </SignedIn>
               </div>: 
                 <div className='flex'>

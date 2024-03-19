@@ -36,8 +36,8 @@ interface Props {
 function PostVersion({ templateId, version, type, id }: Props) {
   const [state, setstate] = useState({
     image: version?.image ||'',
-    version: version?.version ||'title',
-    download: version?.download ||'download',
+    version: version?.version ||'version',
+    download: version?.download ||'',
     changes: version?.changes ||'changes'
 })
   const router = useRouter();
@@ -118,7 +118,7 @@ function PostVersion({ templateId, version, type, id }: Props) {
               <FormLabel className='text-base-semibold text-light-2'>
                 Version
               </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-black'>
                 <Input {...field} placeholder={state.version}/>
               </FormControl>
               <FormMessage />
@@ -158,7 +158,7 @@ function PostVersion({ templateId, version, type, id }: Props) {
                   type='file'
                   accept='image/*'
                   placeholder='Add Version logo'
-                  className='account-form_image-input'
+                  className='account-form_image-input text-black'
                   onChange={(e) => handleImage(e, field.onChange)}
                 />
               </FormControl>
@@ -173,7 +173,7 @@ function PostVersion({ templateId, version, type, id }: Props) {
               <FormLabel className='text-base-semibold text-light-2'>
                 download
               </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-black'>
                 <Input {...field} placeholder={state.download}/>
               </FormControl>
               <FormMessage />

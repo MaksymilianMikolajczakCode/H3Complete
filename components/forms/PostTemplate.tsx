@@ -39,7 +39,7 @@ function PostTemplate({type, template, id }: Props) {
   const [state, setstate] = useState({
     image: template?.image ||'',
     title: template?.title ||'title',
-    download: template?.download ||'download',
+    download: template?.download ||'',
     description: template?.description ||'description',
     specification: template?.specification ||'specification',
     settings: template?.settings ||'settings',

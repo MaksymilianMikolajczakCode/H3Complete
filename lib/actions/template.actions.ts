@@ -58,7 +58,7 @@ export async function editTemplate({ id, title, image, description, settings, do
 export async function fetchTemplates() {
     const pool = await db.connect()
     try {
-        const result = await pool.query(`SELECT * FROM templates`);
+        const result = await pool.query(`SELECT * FROM templates ORDER BY title`);
         return result.rows
     } catch (error) {
         throw new Error(`Failed to fetch templates: ${error.message}`);
@@ -68,7 +68,7 @@ export async function fetchTemplates() {
 export async function fetchVersionById(versionId) {
     const pool = await db.connect()
     try {
-        const result = await pool.query(`SELECT * FROM template_versions WHERE id = $1`, [versionId]);
+        const result = await pool.query(`SELECT * FROM template_versions WHERE id = $1 ORDER BY version`, [versionId]);
         return result.rows
     } catch (error) {
         throw new Error(`Failed to fetch version: ${error.message}`);
