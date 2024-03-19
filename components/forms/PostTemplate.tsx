@@ -22,12 +22,30 @@ import { isBase64Image } from "@/lib/utils";
 
 import { TemplateValidation } from "@/lib/validations/template";
 import { createTemplate } from "@/lib/actions/template.actions";
+import { editTemplate } from "@/lib/actions/template.actions";
 import { Input } from "../ui/input";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Tiptap from "../Tiptap";
+import React from "react";
 
+interface Props {
+  type: string;
+  template?: any;
+  id?: string;
+}
 
-function PostTemplate() {
+function PostTemplate({type, template, id }: Props) {
+
+  const [state, setstate] = useState({
+    image: template?.image ||'',
+    title: template?.title ||'title',
+    download: template?.download ||'download',
+    description: template?.description ||'description',
+    specification: template?.specification ||'specification',
+    settings: template?.settings ||'settings',
+    rules: template?.rules ||'rules',
+    trade: template?.trade ||'trade',
+})
   const router = useRouter();
   const pathname = usePathname();
   const { startUpload } = useUploadThing("media");
@@ -59,15 +77,15 @@ function PostTemplate() {
   const form = useForm<z.infer<typeof TemplateValidation>>({
     resolver: zodResolver(TemplateValidation),
     defaultValues: {
-        title: "",
-        download: "",
-        description: "",
-        specification: "",
+        title: state.title,
+        download: state.download,
+        description: state.description,
+        specification: state.specification,
         // creator: "",
-        settings: "",
-        rules: "",
-        image: "",
-        trade: "",
+        settings: state.settings,
+        rules: state.rules,
+        image: state.image,
+        trade: state.trade,
     },
   });
 
@@ -82,8 +100,8 @@ function PostTemplate() {
     //     values.profile_photo = imgRes[0].fileUrl;
     //   }
     // }
-
-    await createTemplate({
+    if(type === "create") {
+      await createTemplate({
         title: values.title,
         download: values.download,
         description: values.description,
@@ -96,6 +114,23 @@ function PostTemplate() {
       path: pathname
     });
    router.push("/templates");
+    }
+    if(type === "edit") {
+      await editTemplate({
+        id:id,
+        title: values.title,
+        download: values.download,
+        description: values.description,
+        specification: values.specification,
+        // creator: values.creator,
+        settings: values.settings,
+        rules: values.rules,
+        image: values.image,
+        trade: values.trade,
+      path: pathname
+    });
+    router.push(`/templates/${id}`);
+    }
   };
 
   return (
@@ -132,12 +167,12 @@ function PostTemplate() {
               <FormLabel className='text-base-semibold text-light-2'>
                     Image
                 </FormLabel>
-              <FormControl className='flex-1 text-base-semibold text-gray-200'>
+              <FormControl className='flex-1 text-base-semibold text-gray-200 text-black'>
                 <Input
                   type='file'
                   accept='image/*'
                   placeholder='Add profile photo'
-                  className='account-form_image-input'
+                  className=''
                   onChange={(e) => handleImage(e, field.onChange)}
                 />
               </FormControl>
@@ -151,10 +186,10 @@ function PostTemplate() {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Title
+                title
               </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Input {...field} placeholder={state.title}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -166,10 +201,10 @@ function PostTemplate() {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Description
+                description
               </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Textarea {...field}/>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Textarea {...field} placeholder={state.description}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -179,12 +214,12 @@ function PostTemplate() {
           control={form.control}
           name='specification'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3 prose'>
+            <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
                 specification
               </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Tiptap content={field.name} onChange={field.onChange} />
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Tiptap content={state.specification} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -194,12 +229,12 @@ function PostTemplate() {
           control={form.control}
           name='rules'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3 prose'>
+            <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
                 rules
               </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Tiptap content={field.name} onChange={field.onChange} />
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Tiptap content={state.rules} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -209,12 +244,12 @@ function PostTemplate() {
           control={form.control}
           name='settings'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3 prose'>
+            <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
                 settings
               </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Tiptap content={field.name} onChange={field.onChange} />
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Tiptap content={state.specification} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -228,8 +263,8 @@ function PostTemplate() {
               <FormLabel className='text-base-semibold text-light-2'>
                 download
               </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Input {...field} placeholder={state.download}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -239,19 +274,20 @@ function PostTemplate() {
           control={form.control}
           name='trade'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3 prose'>
+            <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Trade
+                trade
               </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Tiptap content={field.name} onChange={field.onChange} />
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Tiptap content={state.trade} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <button type='submit' className='bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded'>
-        Post Competition
+        {type === "create" ? ( <div>Post Template</div>) : ( <div>Edit Template</div>)}
+
     </button>
       </form>
     </Form>

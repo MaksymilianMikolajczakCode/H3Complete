@@ -124,7 +124,7 @@ function Tiptap({ content, onChange }) {
       onUpdate({ editor }) {
         onChange(editor?.getHTML());
       },
-      extensions: [StarterKit, BulletList],
+      extensions: [StarterKit],
   
       content: content, // Initialize the editor with the passed content
       
@@ -142,7 +142,7 @@ function Tiptap({ content, onChange }) {
     return (
       <div>
         <MenuBar editor={editor}/>
-        <div className='no-focus border rounded border-dark-4 bg-dark-3 text-light-1 w-[calc(80vw)] focus:outline-none'>
+        <div className='no-focus border rounded border-dark-4 bg-dark-3 text-light-1 w-full max-w-none prose focus:outline-none text-black bg-white'>
           <EditorContent editor={editor}/>
         </div>
         

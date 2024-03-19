@@ -9,7 +9,14 @@
   padding: 0;
   box-sizing: border-box;
 }
+.cl-internal-1cyy55d {
+  color: #ceb667;
+}
+
 body {
+  background-image: url("https://h3mods.heroes.net.pl/img/bgblack.jpg");
+  background-color: #302f2f;
+  color: white;
   font-family: Inter;
 }
 
@@ -50,111 +57,77 @@ body {
 
 /* Style for the bracket container */
 /* Style for the overall bracket container */
-
-
-/* Style for each round in the bracket */
-.bracket-round {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1; /* Allow each round to grow to an equal height */
-  align-items: center; /* Center content horizontally */
-  justify-content: space-around; /* Distribute matches evenly vertically */
-  text-align: center;
-}
-
-/* Style for the Match component */
-.match {
-  /* Style your Match component as needed */
-  height: 80px; /* Adjust match height as needed */
-  width: 160px; /* Adjust match width as needed */
-  border: 1px solid #ccc; /* Add a border for separation */
-  background-color: #f9f9f9; /* Add a background color */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 8px; /* Adjust padding as needed */
-}
-
-/* Style for the winner match */
-.match.winner {
-  background-color: #a1e577; /* Change background color for the winner */
-  border: 1px solid #5ab65a; /* Change border color for the winner */
-  color: #fff; /* Change text color for the winner */
-}
-
-/* Add hover effect for matches (optional) */
-.match:hover {
-  background-color: #e3e3e3;
+.link-button {
+  display: inline-block;
+  padding: 0.5rem 1rem; /* Adjust padding as needed */
+  margin-right: 1rem; /* Adjust margin as needed */
+  background-color: #1e4fa4; /* Adjust background color as needed */
+  color: #ffffff; /* Adjust text color as needed */
+  border: none;
+  border-radius: 0.25rem; /* Adjust border radius as needed */
+  text-decoration: none;
+  font-size: 1rem; /* Adjust font size as needed */
   cursor: pointer;
+  transition: background-color 0.3s ease; /* Optional: Add transition effect */
 }
 
-/* Style round 0 specifically */
-.round-0 {
-  gap: 16px;
-}
-
-/* Style round 1 specifically */
-.round-1 {
-  /* Add styles specific to round 1 here */
-}
-
-/* Style round 2 specifically */
-.round-2 {
-  /* Add styles specific to round 2 here */
-}
-
-/* Add styles for rounds 3 to 10 as needed */
-.round-3 {
-  /* Add styles specific to round 3 here */
-}
-
-/* Add styles for rounds 4 to 10 as needed */
-/* ... */
-
-/* Add styles for rounds 10 as needed */
-.round-10 {
-  /* Add styles specific to round 10 here */
+.link-button:hover {
+  background-color: #23509e; /* Adjust hover background color as needed */
 }
 
 .stick {
       width: 250px;
       position: fixed;
-      top: 110px;
+      top: 60px;
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
       scroll-snap-align: start;
-      height: calc(100vh - 135px);
+      height: calc(100vh - 85px);
 }
 
 .stick2 {
       position: fixed;
-      top: 110px;
+      top: 50px;
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
       scroll-snap-align: start;
-      height: calc(100vh - 110px);
+      height: calc(100vh - 50px);
+}
+/* Dropdown Button */
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  color:#ceb667;
+  display: inline-block;
 }
 
-.matches-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Three equal-width columns */
-  gap: 20px; /* Adjust the gap between items as needed */
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  color:#ceb667;
+  background-color: #1f1a14;
+  opacity: 0.9;
+  width: 800px; /* Set width to 100% of viewport width */
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
 }
 
-.match {
-  background: #f5f5f5;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.2s;
+/* Links inside the dropdown */
+.dropdown-content a {
+  color:#ceb667;
+  text-decoration: none;
+  display: block;
 }
 
-.match:hover {
-  background: #e0e0e0;
-}
+/* Change color of dropdown links on hover */
 
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
 
 .flexCenter {
   @apply flex justify-center items-center;

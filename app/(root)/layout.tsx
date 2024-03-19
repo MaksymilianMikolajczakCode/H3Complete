@@ -2,7 +2,8 @@ import Topbar from '@/components/shared/Topbar'
 import { ClerkProvider } from '@clerk/nextjs'
 import "../globals.css";
 export const metadata = {
-  title: 'Next.js 13 with Clerk',
+  title: 'H3 Templates',
+  
 }
  
 export default function RootLayout({
@@ -13,8 +14,11 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        {/* <head>
+        <link rel="icon" href="/favicon.ico" />
+        </head> */}
         <body>
-          <div className='fixed w-full'>
+          <div className='w-full'>
           <Topbar/>
           </div>
 

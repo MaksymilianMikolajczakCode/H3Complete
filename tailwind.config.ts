@@ -4,7 +4,11 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./node_modules/flowbite/**/*.js",
   ],
+  variants: {
+    display:['group-hover']
+   },
   theme: {
     extend: {
       colors: {
@@ -17,6 +21,7 @@ module.exports = {
         'light-white-500': '#E4E4E4',
         'primary-500' : '#047fc3',
         'primary-600' : '#036BA3',
+        'main' : "#ceb667" ,
         gray: '#4D4A4A',
         'gray-100': '#3d3d4e',
         'black-100': '#252525',
@@ -34,5 +39,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [require('@tailwindcss/typography'),require('flowbite/plugin')],
 };

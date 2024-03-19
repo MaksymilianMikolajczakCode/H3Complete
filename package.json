@@ -8,17 +8,14 @@
     "start": "next start",
     "lint": "next lint"
   },
-  "browser": {
-    "fs": false,
-    "os": false
-  },
   "dependencies": {
-    "@clerk/nextjs": "^4.23.2",
+    "@clerk/nextjs": "^4.29.7",
     "@hookform/resolvers": "^3.3.0",
     "@mantine/core": "^7.0.0",
     "@mantine/hooks": "^7.0.0",
     "@mantine/tiptap": "^7.0.0",
     "@prisma/client": "^5.9.1",
+    "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-popover": "^1.0.6",
     "@radix-ui/react-select": "^1.2.2",
@@ -39,11 +36,12 @@
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.1",
+    "flowbite": "^2.3.0",
     "font-awesome": "^4.7.0",
     "froala-editor": "^4.1.2",
     "lucide-react": "^0.269.0",
     "mongoose": "^7.4.4",
-    "next": "13.4.19",
+    "next": "^14.1.0",
     "pg": "^8.11.3",
     "postcss": "8.4.28",
     "react": "18.2.0",

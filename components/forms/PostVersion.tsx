@@ -21,23 +21,27 @@ import { isBase64Image } from "@/lib/utils";
 
 
 import { VersionValidation } from "@/lib/validations/version";
-import { createVersion } from "@/lib/actions/template.actions";
+import { createVersion, editVersion } from "@/lib/actions/template.actions";
 import { Input } from "../ui/input";
 import { ChangeEvent, useEffect, useState } from "react";
 import Tiptap from "../Tiptap";
 
 interface Props {
-  templateId: string;
+  templateId?: string;
+  type:string;
+  id?: string;
+  version?: any;
 }
 
-function PostVersion({ templateId }: Props) {
+function PostVersion({ templateId, version, type, id }: Props) {
+  const [state, setstate] = useState({
+    image: version?.image ||'',
+    version: version?.version ||'title',
+    download: version?.download ||'download',
+    changes: version?.changes ||'changes'
+})
   const router = useRouter();
   const pathname = usePathname();
-  // const [tiptapChanges, setTiptapChanges] = useState('');
-  // const handleTiptapChange = (newContent) => {
-  //   setTiptapChanges(newContent);
-  //   console.log(newContent)
-  // };
   const [files, setFiles] = useState<File[]>([]);
   const handleImage = (
     e: ChangeEvent<HTMLInputElement>,
@@ -64,32 +68,46 @@ function PostVersion({ templateId }: Props) {
   const form = useForm<z.infer<typeof VersionValidation>>({
     resolver: zodResolver(VersionValidation),
     defaultValues: {
-      version: "",
-      changes: "",
-      image: "",
-      download: "",
+      version: state.version,
+      changes: state.changes,
+      image: state.image,
+      download: state.download,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof VersionValidation>) => {
 
-    await createVersion({
-      version: values.version,
-      template_id: templateId,
-      changes: values.changes, // Use the most recent value
-      image: values.image,
-      download: values.download,
-      path: pathname
-    });
-  
-    router.push(`/templates/${templateId}`);
+
+    if(type === "create") {
+      await createVersion({
+        version: values.version,
+        template_id: templateId,
+        changes: values.changes, // Use the most recent value
+        image: values.image,
+        download: values.download,
+        path: pathname
+      });
+    
+      router.push(`/templates/${templateId}`);
+    }
+    if(type === "edit") {
+      await editVersion({
+        versionId: id,
+        version: values.version,
+        changes: values.changes, // Use the most recent value
+        image: values.image,
+        download: values.download,
+        path: pathname
+      });
+    
+      router.push(`/templates/${version.template_id}`);
+    }
   };
-  
 
   return (
     <Form {...form}>
       <form
-        className='mt-10 mx-[calc(10vw)] w-[calc(80vw)] flex flex-col justify-start gap-10 mb-6'
+        className='mt-10 mx-[calc(10vw)] w-[calc(79vw)] flex flex-col justify-start gap-10 mb-6'
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
@@ -101,7 +119,7 @@ function PostVersion({ templateId }: Props) {
                 Version
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
+                <Input {...field} placeholder={state.version}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -156,7 +174,7 @@ function PostVersion({ templateId }: Props) {
                 download
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Input {...field}/>
+                <Input {...field} placeholder={state.download}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -166,19 +184,19 @@ function PostVersion({ templateId }: Props) {
           control={form.control}
           name='changes'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3 prose'>
+            <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
                 Changes
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
-                <Tiptap content={field.name} onChange={field.onChange} />
+                <Tiptap content={state.changes} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 <button type='submit' className='bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded'>
-        Post Version
+{type === "create" ? ( <div>Post Version</div>) : ( <div>Edit Version</div>)}
     </button>
       </form>
     </Form>

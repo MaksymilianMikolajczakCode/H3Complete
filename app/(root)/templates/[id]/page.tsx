@@ -24,6 +24,7 @@ async function page({ params }: { params: { id: string } }) {
                 image={result.template.image}
                 templateId={params.id}
                 versions={result.templateVersions}
+                id={params.id}
               />
       </div>
     </section>

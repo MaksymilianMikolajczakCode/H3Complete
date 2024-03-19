@@ -1,48 +1,27 @@
-'use client'
+import { useRouter } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 
-import React from 'react'
-import { JoinCompetition, generateBracket } from "@/lib/actions/competition.actions";
-import { Button } from './ui/button';
+const VersionEntry = ({ version, id, deleteVersion }) => {
+  const router = useRouter();
+  const { has } = auth()
+ 
+  const canAccessSettings = has({permission: "org:mod:change"});
 
+  if(!canAccessSettings) return null;
+  const handleDeleteVersion = () => {
+    deleteVersion(version.id, id)
+      .then(() => router.push("/templates"))
+      .catch(error => console.error("Error deleting version:", error));
+  };
 
-interface Props {
-    currentUserId: string,
-    competitionId: string,
-    startDate: Date,
-    path: string
-}
-
-export const ClientButton = ({competitionId, startDate, path}: Props) => {
   return (
-    <div>
-    <Button onClick={(e) => generateBracket(competitionId, startDate, path)}>
-      generate bracket
-    </Button>
+    <div className="w-full">
+      {/* Your version entry UI */}
+      <button onClick={handleDeleteVersion} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+        Delete Version
+      </button>
     </div>
-  )
-}
+  );
+};
 
-interface Props2 {
-  currentUserId: string,
-  competitionId: string,
-}
-
-export const JoinButton = ({currentUserId, competitionId}: Props2) => {
-  return (
-    <div>
-      <Button onClick={(e) => JoinCompetition({userId: currentUserId, competitionId})}>
-                 Join
-    </Button>
-    </div>
-  )
-}
-
-// export const addAdmin = ({currentUserId, adminUsername}: {currentUserId: string;
-//   adminUsername: string;}) => {
-//     const [isOpen, setIsOpen] = useState(false)
-//     <div>
-//     <Button onClick={(e) => JoinCompetition({userId: currentUserId, competitionId})}>
-//                  Join
-//     </Button>
-//     </div>
-// }
+export default VersionEntry;
