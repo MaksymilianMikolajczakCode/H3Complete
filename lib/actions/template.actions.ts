@@ -1,7 +1,8 @@
 "use server";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { pool } from '../db'; // Import the existing connection pool
+// import { pool } from '../db'; // Import the existing connection pool
+import {db} from '@vercel/postgres';
 
 interface Params {
     id?: string;
@@ -16,7 +17,10 @@ interface Params {
     path: string;
 }
 
+
+
 export async function createTemplate({ title, image, description, settings, download, trade, rules, specification, path }: Params) {
+    const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
     if(!canManage) return null
@@ -33,6 +37,7 @@ export async function createTemplate({ title, image, description, settings, down
 }
 
 export async function editTemplate({ id, title, image, description, settings, download, trade, rules, specification, path }: Params) {
+    const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
     if(!canManage) return null
@@ -51,6 +56,7 @@ export async function editTemplate({ id, title, image, description, settings, do
 
 
 export async function fetchTemplates() {
+    const pool = await db.connect()
     try {
         const result = await pool.query(`SELECT * FROM templates`);
         return result.rows
@@ -60,6 +66,7 @@ export async function fetchTemplates() {
 }
 
 export async function fetchVersionById(versionId) {
+    const pool = await db.connect()
     try {
         const result = await pool.query(`SELECT * FROM template_versions WHERE id = $1`, [versionId]);
         return result.rows
@@ -70,6 +77,7 @@ export async function fetchVersionById(versionId) {
 
 
 export async function fetchTemplateById(template_id) {
+    const pool = await db.connect()
     try {
         const templateQuery = `SELECT * FROM templates WHERE id = $1`;
         const templateResult = await pool.query(templateQuery, [template_id]);
@@ -101,6 +109,7 @@ interface Params2 {
 }
 
 export async function createVersion({ version, image, changes, download, template_id, path }: Params2) {
+    const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
     if(!canManage) return null
@@ -128,6 +137,7 @@ export async function createVersion({ version, image, changes, download, templat
 }
 
 export async function editVersion({ versionId, version, image, changes, download, path }: Params2) {
+    const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
     if(!canManage) return null
@@ -147,6 +157,7 @@ export async function editVersion({ versionId, version, image, changes, download
 }
 
 export async function deleteVersion(versionId, template_id) {
+    const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
     if(!canManage) return null
@@ -168,6 +179,7 @@ export async function deleteVersion(versionId, template_id) {
 }
 
 export async function deleteTemplate(template_id) {
+    const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
     if(!canManage) return null
