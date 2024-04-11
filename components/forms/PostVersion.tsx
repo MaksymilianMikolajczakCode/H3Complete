@@ -40,6 +40,7 @@ function PostVersion({ templateId, version, type, id }: Props) {
     download: version?.download ||'',
     changes: version?.changes ||'changes'
 })
+  const { startUpload } = useUploadThing("media");
   const router = useRouter();
   const pathname = usePathname();
   const [files, setFiles] = useState<File[]>([]);
@@ -76,7 +77,16 @@ function PostVersion({ templateId, version, type, id }: Props) {
   });
 
   const onSubmit = async (values: z.infer<typeof VersionValidation>) => {
+    const blob = values.image;
 
+    const hasImageChanged = isBase64Image(blob);
+    if (hasImageChanged) {
+      const imgRes = await startUpload(files);
+
+      if (imgRes && imgRes[0].fileUrl) {
+        values.image = imgRes[0].fileUrl;
+      }
+    }
 
     if(type === "create") {
       await createVersion({
