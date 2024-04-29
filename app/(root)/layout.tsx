@@ -1,11 +1,18 @@
 import Topbar from '@/components/shared/Topbar'
 import { ClerkProvider } from '@clerk/nextjs'
 import "../globals.css";
+import { Open_Sans} from "next/font/google"
 export const metadata = {
   title: 'H3 Templates',
   
 }
- 
+
+const open = Open_Sans({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
 export default function RootLayout({
   children,
 }: {
@@ -18,7 +25,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         </head> */}
         <body>
-          <div className='w-full'>
+          <div className={open.className}>
           <Topbar/>
           </div>
 

@@ -11,7 +11,7 @@ async function TemplatesLayout({
   const result = await fetchTemplates();
   return (
     <section className='flex flex-row w-[calc(100vw-30px)] overflow-x-hidden'>
-    <div className="mt-5 w-80 max-w-xs flex flex-col gap-5 m-3 stick">
+    <div className="mt-5 w-20 flex flex-col gap-3 m-2 stick">
     {result.map((template) => (
   <Link 
     href={`/templates/${template.id}`}
@@ -23,7 +23,7 @@ async function TemplatesLayout({
       <AddButton/>
     </div>
   
-    <div className="w-[calc(100vw-30px)] ml-80">
+    <div className="w-[calc(100vw-300px)] ml-48">
       {children}
     </div>
   </section>
