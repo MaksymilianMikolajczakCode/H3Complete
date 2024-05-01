@@ -1,6 +1,7 @@
 import Topbar from '@/components/shared/Topbar'
 import { ClerkProvider } from '@clerk/nextjs'
 import "../globals.css";
+import "../../styles.css";
 import { Open_Sans} from "next/font/google"
 export const metadata = {
   title: 'H3 Templates',
