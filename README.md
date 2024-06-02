@@ -4,7 +4,8 @@
 <body>
   <h1>Project Name: H3Complete</h1>
   <h2>Live Website</h2>
-  <p>Under Construction</p>
+  <a>https://h3szablony.heroes.net.pl/templates</a>
+  <p>This project was created for H3.gg/Jaskinia Behemota it all crud operrations and more but currently awaits for content</p>
 
   <h2>Tech used</h2>
   <ul>
