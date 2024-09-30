@@ -13,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem} from "@/components/ui/select"
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -38,14 +39,19 @@ function PostTemplate({type, template, id }: Props) {
 
   const [state, setstate] = useState({
     image: template?.image ||'',
-    title: template?.title ||'title',
+    title: template?.title ||'Tytuł Szablonu',
     download: template?.download ||'',
-    description: template?.description ||'description',
-    specification: template?.specification ||'specification',
-    settings: template?.settings ||'settings',
-    rules: template?.rules ||'rules',
-    trade: template?.trade ||'trade',
+    description: template?.description ||'Opis Szablonu',
+    specification: template?.specification ||'Specyfikacja Szablonu',
+    settings: template?.settings ||'Polecane Ustawienia Szablonu',
+    rules: template?.rules ||'Zasady Szablonu',
+    trade: template?.trade ||'Licytacja',
+    specificationLink: template?.specificationlink || '',
+    changelog: template?.changelog || '',
+    changelogLink: template?.changeloglink || '',
+    category: template?.category || ''
 })
+console.log(state)
   const router = useRouter();
   const pathname = usePathname();
   const { startUpload } = useUploadThing("media");
@@ -86,6 +92,10 @@ function PostTemplate({type, template, id }: Props) {
         rules: state.rules,
         image: state.image,
         trade: state.trade,
+        specificationLink: state.specificationLink,
+        changelog: state.changelog,
+        changelogLink: state.changelogLink,
+        category: state.category,
     },
   });
 
@@ -111,6 +121,10 @@ function PostTemplate({type, template, id }: Props) {
         rules: values.rules,
         image: values.image,
         trade: values.trade,
+        specificationLink: values.specificationLink,
+        changelog: values.changelog,
+        changelogLink: values.changelogLink,
+        category: values.category,
       path: pathname
     });
    router.push("/templates");
@@ -127,6 +141,10 @@ function PostTemplate({type, template, id }: Props) {
         rules: values.rules,
         image: values.image,
         trade: values.trade,
+        specificationLink: values.specificationLink,
+        changelog: values.changelog,
+        changelogLink: values.changelogLink,
+        category: values.category,
       path: pathname
     });
     router.push(`/templates/${id}`);
@@ -165,7 +183,7 @@ function PostTemplate({type, template, id }: Props) {
                 )}
               </FormLabel> */}
               <FormLabel className='text-base-semibold text-light-2'>
-                    Image
+                    Wykres
                 </FormLabel>
               <FormControl className='flex-1 text-base-semibold text-gray-200 text-black'>
                 <Input
@@ -186,7 +204,7 @@ function PostTemplate({type, template, id }: Props) {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                title
+              Tytuł
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
                 <Input {...field} placeholder={state.title}/>
@@ -201,10 +219,49 @@ function PostTemplate({type, template, id }: Props) {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                description
+              Opis
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
                 <Textarea {...field} placeholder={state.description}/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+<FormField
+  control={form.control}
+  name="category"
+  render={({ field }) => (
+    <FormItem className='flex w-full flex-col gap-3'>
+      <FormLabel className='text-base-semibold text-light-2'>Kategoria</FormLabel>
+      <Select onValueChange={field.onChange} value={field.value}>
+        <FormControl className='no-focus border border-dark-4 text-light-1 text-black'>
+          <SelectTrigger>
+            <SelectValue placeholder={field.value || "Wybierz kategorię"} />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent>
+          <SelectItem value="Klasyczne">Klasyczny</SelectItem>
+          <SelectItem value="One-Hero">One-Hero</SelectItem>
+          <SelectItem value="Egzotyka">Egzotyka</SelectItem>
+          <SelectItem value="Jebusy">Jebus</SelectItem>
+        </SelectContent>
+      </Select>
+    </FormItem>
+  )}
+/>
+
+
+        <FormField
+          control={form.control}
+          name='settings'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+              Ustawienia
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Tiptap content={state.settings} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -216,10 +273,55 @@ function PostTemplate({type, template, id }: Props) {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                specification
+              Specyfikacja
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
                 <Tiptap content={state.specification} onChange={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='specificationLink'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+              Link do pelnej specyfikacji (opcjonalne)
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Input {...field} placeholder={state.specificationLink}/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='changelog'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+              Changelog (opcjonalne)
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Tiptap content={state.changelog} onChange={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='changelogLink'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+              Link do changeloga (opcjonalne)
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Input {...field} placeholder={state.changelogLink}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -231,25 +333,10 @@ function PostTemplate({type, template, id }: Props) {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                rules
+                Zasady
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
                 <Tiptap content={state.rules} onChange={field.onChange} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='settings'
-          render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
-                settings
-              </FormLabel>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
-                <Tiptap content={state.specification} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -261,7 +348,7 @@ function PostTemplate({type, template, id }: Props) {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                download
+                Link Do Pobrania (opcjonalne)
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
                 <Input {...field} placeholder={state.download}/>
@@ -276,7 +363,7 @@ function PostTemplate({type, template, id }: Props) {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                trade
+              Licytacja
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
                 <Tiptap content={state.trade} onChange={field.onChange} />
@@ -286,7 +373,7 @@ function PostTemplate({type, template, id }: Props) {
           )}
         />
         <button type='submit' className='bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded'>
-        {type === "create" ? ( <div>Post Template</div>) : ( <div>Edit Template</div>)}
+        {type === "create" ? ( <div>Dodaj Szablon</div>) : ( <div>Edytuj Szablon</div>)}
 
     </button>
       </form>

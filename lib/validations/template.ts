@@ -10,5 +10,8 @@ export const TemplateValidation = z.object({
   rules: z.string(),
   image: z.string(),
   trade: z.string(),
-
+  specificationLink: z.string().optional(),
+  changelog: z.string().optional(),
+  changelogLink: z.string().optional(),
+  category: z.string(),
 });

@@ -6,4 +6,5 @@ export const VersionValidation = z.object({
   changes: z.string(),
   creator: z.string().optional(),
   image: z.string(),
+  specificationLink: z.string().optional()
 });

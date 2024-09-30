@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "../components/ui/select";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from './ui/dialog';
 
 
 interface Props {
@@ -21,12 +21,16 @@ interface Props {
     trade: string,
     download: string | undefined,
     templateId: string,
+    specificationLink: string | undefined,
+    changelog: string | undefined,
+    changelogLink: string | undefined,
     versions:[{
       id:string,
       version: string,
       image: string,
       download: string,
       changes: string,
+      specificationLink: string | undefined
       //creator: string | undefined,
     }]
   }
@@ -42,10 +46,12 @@ function Template({
   download,
   templateId,
   versions,
+  specificationLink,
+  changelog,
+  changelogLink
 }: Props) {
   const router = useRouter();
   const { has } = useAuth();
- 
   const canManageSettings = has({ permission: "org:mod:change" });
 
   const [activeWindow, setActiveWindow] = useState("start");
@@ -65,13 +71,13 @@ function Template({
             <div className="mr-2 overflow-x-hidden">
               <Select onValueChange={handleSelectChange}>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder={title.length > 20 ? `${title.slice(0, 20)}...` : title} />
+                  <SelectValue placeholder={title} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="start">{title.length > 25 ? `${title.slice(0, 25)}...` : title}</SelectItem>
+                  <SelectItem value="start">{title}</SelectItem>
                   {versions?.map((version, index) => (
                     <SelectItem key={index} value={index.toString()}>
-                      {version.version.length > 20 ? `${version.version.slice(0, 20)}...` : version.version}
+                      {version.version}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -79,73 +85,131 @@ function Template({
             </div>
             {canManageSettings && (<span>
               <Link href={`/create-version/${templateId}`} className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded">
-                Add New Version
+                Nowa Wersja
               </Link>
             </span>)}
             
           </div>
         </div>
-        <div className="mt-3">
-          <h2 className="font-semibold text-lg whitespace-pre-line">Description</h2>
-          {description}
-        </div>
-        <div className="text-sky-500 mt-1">
+        <div className="text-sky-500 mt-2 mb-2 font-semibold">
           {download ? (
             <Link href={download}>
-              Download {title.length > 20 ? `${title.slice(0, 20)}...` : title}
+              Pobierz  {title}
             </Link>
           ) : (
-            <span></span>
+            <div className='text-white'>Szablon wbudowany w HotA</div>
           )}
         </div>
+        <div className="mt-3">
+          <h2 className="font-semibold text-lg whitespace-pre-line mb-2">Opis</h2>
+          {description}
+        </div>
         <div className="mt-1 whitespace-pre-line">
-          <h2 className="font-semibold text-lg">Settings</h2>
+          <h2 className="font-semibold text-lg mb-2">Ustawienia</h2>
           <div className="prose max-w-screen-2xl text-white"><div dangerouslySetInnerHTML={{ __html: settings }} /></div>
         </div>
-        <div className="mt-1">
-          <h2 className="font-semibold text-lg">Graph</h2>
-          {image?.length > 0 && 
-            <Image
-              src={image}
-              alt='profile_icon'
-              width={600}
-              height={400}
-              layout="responsive"
-              priority
-              className='rounded'
-            />
-          }
-        </div>
-        <div className="mt-1 whitespace-pre-line">
-          <h2 className="font-semibold text-lg">Specification</h2>
+
+    <div className="mt-2">
+      <h2 className="font-semibold text-lg">Graf</h2>
+      <Dialog>
+        <DialogTrigger asChild>
+          <button 
+            style={{ 
+              width: '100%', 
+              height: 'auto', 
+              position: 'relative', 
+              border: 'none', 
+              padding: 0, 
+              background: 'none',
+              cursor: 'pointer' 
+            }}
+            className='mt-2'
+          >
+            <div style={{ paddingBottom: '50%', position: 'relative' }}>
+              {image?.length > 0 && 
+                <Image
+                  src={image}
+                  alt="Graf"
+                  layout="fill"
+                  objectFit="contain"
+                  className='rounded'
+                />
+              }
+            </div>
+          </button>
+        </DialogTrigger>
+
+        <DialogContent className='min-w-[100%] h-[100vh]'>
+          <Image
+            src={image}
+            alt="Graf"
+            layout="fill"
+            objectFit="contain"
+            className='rounded'
+          />
+        </DialogContent>
+      </Dialog>
+    </div>
+
+
+
+        <div className="whitespace-pre-line mt-2 mb-2">
+          <h2 className="font-semibold text-lg mb-2">Specyfikacja</h2>
           <div className="prose max-w-screen-2xl text-white"><div dangerouslySetInnerHTML={{ __html: specification }} /></div>
         </div>
-        <div className="mt-1">
-          <h2 className="font-semibold text-lg whitespace-pre-line">Rules</h2>
-          <div className="prose max-w-screen-2xl text-white"><div dangerouslySetInnerHTML={{ __html: rules }} /></div>
+        <div>
+  {specificationLink?.length > 9 ? (
+    <div className="text-sky-500 mt-2 mb-2 font-semibold">
+      <Link href={specificationLink}>
+        Link do pełnej specyfikacji {title}
+      </Link>
+    </div>
+  ) : (
+    <span></span>
+  )}
+</div>
+{changelog?.length > 9 || changelogLink?.length > 9 ? <div className="whitespace-pre-line mt-2 mb-2">
+          <h2 className="font-semibold text-lg mb-2">Changelog</h2>
+          <div className="prose max-w-screen-2xl text-white"><div dangerouslySetInnerHTML={{ __html: changelog }} /></div>
+          {changelogLink?.length > 9 ? (
+    <div className="text-sky-500 mt-2 mb-2 font-semibold">
+      <Link href={specificationLink}>
+       Pełny Changelog
+      </Link>
+    </div>
+  ) : (
+    <span></span>
+  )}
+        </div> : <div></div>}
+
+
+
+        <div className="mt-2 mb-2">
+          <h2 className="font-semibold text-lg whitespace-pre-line">Zasady</h2>
+          <div className="prose max-w-screen-2xl text-white mt-2"><div dangerouslySetInnerHTML={{ __html: rules }} /></div>
         </div>
         <div className="mt-1">
-          <h2 className="font-semibold text-lg whitespace-pre-line">Trade</h2>
-          <div className="prose max-w-screen-2xl text-white"><div dangerouslySetInnerHTML={{ __html: trade }} /></div>
+          <h2 className="font-semibold text-lg whitespace-pre-line">Licytacja</h2>
+          <div className="prose max-w-screen-2xl text-white mt-2 mb-2"><div dangerouslySetInnerHTML={{ __html: trade }} /></div>
         </div>
         <div className='py-2'>
           
           {canManageSettings && (
             <div>
               <Link href={`/edit-template/${id}`} className='inline-block px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded text-center mr-3'>
-            Edit Template
+            Edytuj
           </Link>
             <Dialog>
-              <DialogTrigger className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Delete Template</DialogTrigger>
+              <DialogTrigger className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Usuń szablon</DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogTitle>Czy jesteś absolutnie pewien?</DialogTitle>
                   <DialogDescription>
-                    This action cannot be undone. This will permanently delete {title.length > 20 ? `${title.slice(0, 20)}...` : title}
+                  Tej akcji nie można cofnąć. Spowoduje to trwałe usunięcie {title}
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <button onClick={() => {deleteTemplate(templateId).then(() => router.push("/templates"))}} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Delete Template</button>
+                  <button onClick={() => {deleteTemplate(templateId).then(() => router.push("/templates"))}} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Usuń szablon</button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -165,13 +229,13 @@ function Template({
               <div className="mr-2 overflow-x-hidden">
                 <Select onValueChange={handleSelectChange}>
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder={version.version.length > 20 ? `${version.version.slice(0, 20)}...` : version.version} />
+                    <SelectValue placeholder={version.version} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="start">{title.length > 25 ? `${title.slice(0, 25)}...` : title}</SelectItem>
+                    <SelectItem value="start">{title}</SelectItem>
                     {versions?.map((v, idx) => (
                       <SelectItem key={idx} value={idx.toString()}>
-                        {v.version.length > 20 ? `${v.version.slice(0, 20)}...` : v.version}
+                        {v.version}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -179,61 +243,73 @@ function Template({
               </div>
               {canManageSettings && (<span>
                 <Link href={`/create-version/${templateId}`} className='inline-block px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded text-center mr-3'>
-                  Add New Version
+                  Newa Wersja
                 </Link>
               </span>)}
               
             </div>
           </div>
-          <div className="mt-1">
-            {version.image.length > 0 && 
-              <div>
-                <h2 className="font-semibold text-lg">Graph</h2>
-                <Image
-                  src={version.image}
-                  alt="profile_icon"
-                  width={1000}
-                  height={500}
-                  layout="responsive"
-                  priority
-                  className='rounded'
-                />
-              </div>
-            }
-          </div>
-          <div className="mt-1">
-            <h2 className="font-semibold text-lg whitespace-pre-line">Changes</h2>
-            <div className="prose max-w-screen-2xl text-white">
-              <div dangerouslySetInnerHTML={{ __html: version.changes }}  />
-            </div>
-          </div>
-          <div className="text-sky-500 mt-1">
+          <div className="text-sky-500 mt-1 font-semibold">
             {version.download ? (
               <Link href={version.download}>
-                Download {version.version.length > 20 ? `${version.version.slice(0, 20)}...` : version.version}
+                Pobierz {version.version}
               </Link>
             ) : (
-              <span></span>
+              <div>Szablon wbudowany w HotA</div>
             )}
+          </div>
+          <div className="mt-2 mb-2">
+          <h2 className="font-semibold text-lg">Graf</h2>
+          <div style={{ maxWidth: '100%', position: 'relative' }} className='mt-2'>
+          <div style={{ paddingBottom: '50%', position: 'relative' }}>
+          {version.image?.length > 0 && 
+            <Image
+              src={version.image}
+              alt='profile_icon'
+              layout="fill"
+              objectFit="contain"
+              className='rounded'
+            />
+          }
+          </div>
+          </div>
+        </div>
+          <div className="mt-2">
+            <h2 className="font-semibold text-lg whitespace-pre-line">Specyfikacja</h2>
+            <div className="prose max-w-screen-2xl text-white mt-2 mb-2">
+              <div dangerouslySetInnerHTML={{ __html: version.changes }}  />
+            </div>
+            <div>
+  {version.specificationlink?.length > 9 ? (
+    <div className="text-sky-500 mt-2 mb-2 font-semibold">
+      <Link href={version.specificationlink}>
+        Link do pełnej specyfikacji {version.version}
+      </Link>
+    </div>
+  ) : (
+    <span></span>
+  )}
+</div>
+
           </div>
           <div className='py-2'>
         
             {canManageSettings && (
               <div>
                 <Link href={`/edit-version/${version.id}`} className='inline-block px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded text-center mr-3'>
-              Edit Version
+              Edytuj
             </Link>
               <Dialog>
-                <DialogTrigger className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Delete Version</DialogTrigger>
+                <DialogTrigger className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Usuń wersje</DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogTitle>Czy jesteś absolutnie pewien?</DialogTitle>
                     <DialogDescription>
-                      This action cannot be undone. This will permanently delete {version.version.length > 20 ? `${version.version.slice(0, 20)}...` : version.version}
+                    Tej akcji nie można cofnąć. Spowoduje to trwałe usunięcie {version.version}
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
-                    <button onClick={() => {deleteVersion(version.id, id).then(() => router.push("/templates"))}} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Delete Version</button>
+                    <button onClick={() => {deleteVersion(version.id, id).then(() => router.push("/templates"))}} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Usuń wersje</button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>

@@ -36,9 +36,10 @@ interface Props {
 function PostVersion({ templateId, version, type, id }: Props) {
   const [state, setstate] = useState({
     image: version?.image ||'',
-    version: version?.version ||'version',
+    version: version?.version ||'wersja',
     download: version?.download ||'',
-    changes: version?.changes ||'changes'
+    changes: version?.changes ||'zmiany',
+    specificationLink: version?.specificationlink || ''
 })
   const { startUpload } = useUploadThing("media");
   const router = useRouter();
@@ -73,6 +74,7 @@ function PostVersion({ templateId, version, type, id }: Props) {
       changes: state.changes,
       image: state.image,
       download: state.download,
+      specificationLink: state.specificationLink
     },
   });
 
@@ -95,6 +97,7 @@ function PostVersion({ templateId, version, type, id }: Props) {
         changes: values.changes, // Use the most recent value
         image: values.image,
         download: values.download,
+        specificationLink: values.specificationLink,
         path: pathname
       });
     
@@ -107,6 +110,7 @@ function PostVersion({ templateId, version, type, id }: Props) {
         changes: values.changes, // Use the most recent value
         image: values.image,
         download: values.download,
+        specificationLink: values.specificationLink,
         path: pathname
       });
     
@@ -126,7 +130,7 @@ function PostVersion({ templateId, version, type, id }: Props) {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Version
+                Wersja
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-black'>
                 <Input {...field} placeholder={state.version}/>
@@ -161,7 +165,7 @@ function PostVersion({ templateId, version, type, id }: Props) {
                 )}
               </FormLabel> */}
               <FormLabel className='text-base-semibold text-light-2'>
-                    Image
+                    Graf
                 </FormLabel>
               <FormControl className='flex-1 text-base-semibold text-gray-200'>
                 <Input
@@ -181,7 +185,7 @@ function PostVersion({ templateId, version, type, id }: Props) {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                download
+                Link Do Pobrania
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-black'>
                 <Input {...field} placeholder={state.download}/>
@@ -196,7 +200,7 @@ function PostVersion({ templateId, version, type, id }: Props) {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Changes
+                Specyfikacja
               </FormLabel>
               <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
                 <Tiptap content={state.changes} onChange={field.onChange} />
@@ -205,8 +209,23 @@ function PostVersion({ templateId, version, type, id }: Props) {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name='specificationLink'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+                Link do pelnej specyfikacji (opcjonalne)
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 text-black'>
+                <Input {...field} placeholder={state.specificationLink}/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 <button type='submit' className='bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded'>
-{type === "create" ? ( <div>Post Version</div>) : ( <div>Edit Version</div>)}
+{type === "create" ? ( <div>Dodaj Wersje</div>) : ( <div>Edytuj Wersje</div>)}
     </button>
       </form>
     </Form>

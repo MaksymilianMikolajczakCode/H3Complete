@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { currentUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 import { NavLinks, NavLinks2 } from '@/constants'
 import { OrganizationSwitcher, SignedIn, SignOutButton, UserButton } from "@clerk/nextjs";
 import { VscMenu } from "react-icons/vsc";
@@ -53,7 +53,7 @@ import { IoMdPerson } from "react-icons/io";
 </div>
 </div>
 <div className='float-right h-[40px] mr-10 lg:mr-0'>
-          <div className='flex justify-end gap-4 margin-left: auto'>
+          <div className='flex justify-end gap-4 margin-left: auto h-full'>
               {user? <div className='flex flex-row items-center ml-[-15px] '>
                 <SignedIn>
               <OrganizationSwitcher />

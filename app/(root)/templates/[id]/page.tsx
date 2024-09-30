@@ -24,6 +24,9 @@ async function page({ params }: { params: { id: string } }) {
                 image={result.template.image}
                 templateId={params.id}
                 versions={result.templateVersions}
+                specificationLink={result.template.specificationlink}
+                changelog={result.template.changelog}
+                changelogLink={result.template.changeloglink}
                 id={params.id}
               />
       </div>

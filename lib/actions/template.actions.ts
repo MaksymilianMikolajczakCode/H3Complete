@@ -14,21 +14,25 @@ interface Params {
     specification: string;
     trade: string;
     download: string | undefined;
+    specificationLink: string | undefined;
+    changelog: string | undefined;
+    changelogLink: string | undefined;
+    category: string;
     path: string;
 }
 
 
 
-export async function createTemplate({ title, image, description, settings, download, trade, rules, specification, path }: Params) {
+export async function createTemplate({ title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category, path }: Params) {
     // const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
     if(!canManage) return null
     try {
         await pool.query(
-            `INSERT INTO h3_szablony.templates (title, image, description, settings, download, trade, rules, specification)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-            [title, image, description, settings, download, trade, rules, specification]
+            `INSERT INTO h3_szablony.templates (title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+            [title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category]
         );
         revalidatePath(path);
     } catch (error) {
@@ -36,7 +40,7 @@ export async function createTemplate({ title, image, description, settings, down
     }
 }
 
-export async function editTemplate({ id, title, image, description, settings, download, trade, rules, specification, path }: Params) {
+export async function editTemplate({ id, title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category, path }: Params) {
     // const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
@@ -44,9 +48,9 @@ export async function editTemplate({ id, title, image, description, settings, do
     try {
         await pool.query(
             `UPDATE h3_szablony.templates 
-             SET title = $2, image = $3, description = $4, settings = $5, download = $6, trade = $7, rules = $8, specification = $9
+             SET title = $2, image = $3, description = $4, settings = $5, download = $6, trade = $7, rules = $8, specification = $9, specificationLink = $10, changelog = $11, changelogLink = $12, category = $13
              WHERE id = $1`,
-            [id, title, image, description, settings, download, trade, rules, specification]
+            [id, title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category]
         );
         revalidatePath(path);
     } catch (error) {
@@ -58,12 +62,13 @@ export async function editTemplate({ id, title, image, description, settings, do
 export async function fetchTemplates() {
     // const pool = await db.connect()
     try {
-        const result = await pool.query(`SELECT * FROM h3_szablony.templates ORDER BY title`);
-        return result.rows
+        const result = await pool.query(`SELECT * FROM h3_szablony.templates ORDER BY LOWER(title)`);
+        return result.rows;
     } catch (error) {
         throw new Error(`Failed to fetch templates: ${error.message}`);
     }
 }
+
 
 export async function fetchVersionById(versionId) {
     // const pool = await db.connect()
@@ -106,9 +111,10 @@ interface Params2 {
     download: string;
     path: string;
     template_id?: string;
+    specificationLink: string | undefined
 }
 
-export async function createVersion({ version, image, changes, download, template_id, path }: Params2) {
+export async function createVersion({ version, image, changes, download, template_id, specificationLink, path }: Params2) {
     // const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
@@ -116,10 +122,10 @@ export async function createVersion({ version, image, changes, download, templat
     try {
         // Insert new version into template_versions table
         const { rows: [{ id: versionId }] } = await pool.query(
-            `INSERT INTO h3_szablony.template_versions (version, image, changes, download, template_id)
-             VALUES ($1, $2, $3, $4, $5)
+            `INSERT INTO h3_szablony.template_versions (version, image, changes, download, template_id, specificationLink)
+             VALUES ($1, $2, $3, $4, $5, $6)
              RETURNING id`,
-            [version, image, changes, download, template_id]
+            [version, image, changes, download, template_id, specificationLink]
         );
 
         // Update templates table to include the new version ID
@@ -136,7 +142,7 @@ export async function createVersion({ version, image, changes, download, templat
     }
 }
 
-export async function editVersion({ versionId, version, image, changes, download, path }: Params2) {
+export async function editVersion({ versionId, version, image, changes, download, specificationLink, path }: Params2) {
     // const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
@@ -145,9 +151,9 @@ export async function editVersion({ versionId, version, image, changes, download
         // Update the version details in the template_versions table
         await pool.query(
             `UPDATE h3_szablony.template_versions
-             SET version = $1, image = $2, changes = $3, download = $4
-             WHERE id = $5`,
-            [version, image, changes, download, versionId]
+             SET version = $1, image = $2, changes = $3, download = $4, specificationLink = $5
+             WHERE id = $6`,
+            [version, image, changes, download, specificationLink, versionId]
         );
 
         revalidatePath(path);
