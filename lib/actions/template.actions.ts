@@ -30,7 +30,7 @@ export async function createTemplate({ title, image, description, settings, down
     if(!canManage) return null
     try {
         await pool.query(
-            `INSERT INTO h3_szablony.templates (title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink)
+            `INSERT INTO h3_szablony.templates (title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
             [title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category]
         );
