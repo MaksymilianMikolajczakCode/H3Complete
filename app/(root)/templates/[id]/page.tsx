@@ -28,6 +28,9 @@ async function page({ params }: { params: { id: string } }) {
                 changelog={result.template.changelog}
                 changelogLink={result.template.changeloglink}
                 id={params.id}
+                bannedHeroes={result.bannedHeroesList}
+                bannedSpells={result.bannedSpellsList}
+                bannedArtefacts={result.bannedArtefactsList}
               />
       </div>
     </section>

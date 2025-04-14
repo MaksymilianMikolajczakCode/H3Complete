@@ -4,7 +4,9 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
-
+import { HeroNames } from "@/constants/heroes";
+import { SpellNames } from "@/constants/spells";
+import { ArtefactNames } from "@/constants/artefacts";
 import {
   Form,
   FormControl,
@@ -14,6 +16,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem} from "@/components/ui/select"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -49,9 +64,12 @@ function PostTemplate({type, template, id }: Props) {
     specificationLink: template?.specificationlink || '',
     changelog: template?.changelog || '',
     changelogLink: template?.changeloglink || '',
-    category: template?.category || ''
+    category: template?.category || '',
+    bannedHeroes: template?.banned_heroes || '',
+    bannedSpells: template?.banned_spells || '',
+    bannedArtefacts: template?.banned_artefacts || '',
 })
-console.log(state)
+
   const router = useRouter();
   const pathname = usePathname();
   const { startUpload } = useUploadThing("media");
@@ -96,8 +114,63 @@ console.log(state)
         changelog: state.changelog,
         changelogLink: state.changelogLink,
         category: state.category,
+        bannedHeroes: state.bannedHeroes,
+        bannedSpells: state.bannedSpells,
+        bannedArtefacts: state.bannedArtefacts,
     },
   });
+
+
+
+
+  const [filteredHeroes, setFilteredHeroes] = useState(HeroNames);
+
+  const handleSelectHero = (hero: string) => {
+    const currentHeroes = form.getValues("bannedHeroes") || [];
+    if (!currentHeroes.includes(hero)) {
+      form.setValue("bannedHeroes", [...currentHeroes, hero]);
+    }
+  };
+  
+  const handleRemoveHero = (heroToRemove: string) => {
+    const currentHeroes = form.getValues("bannedHeroes") || [];
+    form.setValue("bannedHeroes", currentHeroes.filter((hero) => hero !== heroToRemove));
+  };
+  
+  const [filteredSpells, setFilteredSpells] = useState(SpellNames);
+
+  const handleSelectSpell = (spell: string) => {
+    const currentSpells = form.getValues("bannedSpells") || [];
+    if (!currentSpells.includes(spell)) {
+      form.setValue("bannedSpells", [...currentSpells, spell]);
+    }
+  };
+  
+  const handleRemoveSpell = (spellToRemove: string) => {
+    const currentSpells = form.getValues("bannedSpells") || [];
+    form.setValue(
+      "bannedSpells",
+      currentSpells.filter((spell) => spell !== spellToRemove)
+    );
+  };
+  
+  const [filteredArtefacts, setFilteredArtefacts] = useState(ArtefactNames);
+
+  const handleSelectArtefact = (artefact: string) => {
+    const currentArtefacts = form.getValues("bannedArtefacts") || [];
+    if (!currentArtefacts.includes(artefact)) {
+      form.setValue("bannedArtefacts", [...currentArtefacts, artefact]);
+    }
+  };
+  
+  const handleRemoveArtefact = (artefactToRemove: string) => {
+    const currentArtefacts = form.getValues("bannedArtefacts") || [];
+    form.setValue(
+      "bannedArtefacts",
+      currentArtefacts.filter((artefact) => artefact !== artefactToRemove)
+    );
+  };
+
 
   const onSubmit = async (values: z.infer<typeof TemplateValidation>) => {
     const blob = values.image;
@@ -125,6 +198,9 @@ console.log(state)
         changelog: values.changelog,
         changelogLink: values.changelogLink,
         category: values.category,
+        bannedHeroes: values.bannedHeroes,
+        bannedSpells: values.bannedSpells,
+        bannedArtefacts: values.bannedArtefacts,
       path: pathname
     });
    router.push("/templates");
@@ -145,6 +221,9 @@ console.log(state)
         changelog: values.changelog,
         changelogLink: values.changelogLink,
         category: values.category,
+        bannedHeroes: values.bannedHeroes,
+        bannedSpells: values.bannedSpells,
+        bannedArtefacts: values.bannedArtefacts,
       path: pathname
     });
     router.push(`/templates/${id}`);
@@ -250,6 +329,275 @@ console.log(state)
     </FormItem>
   )}
 />
+
+
+
+
+
+
+
+
+<FormField
+  control={form.control}
+  name="bannedHeroes"
+  render={({ field }) => (
+    <FormItem className="flex flex-col">
+      <FormLabel>Select BannedHeroes (Optional)</FormLabel>
+      <Popover>
+        <PopoverTrigger asChild>
+          <FormControl>
+            <Button
+              variant="outline"
+              className="w-[200px] justify-between"
+              role="combobox"
+            >
+              {field.value && field.value.length > 0
+                ? `${field.value.length} hero${field.value.length > 1 ? "es" : ""} selected`
+                : "Select heroes"}
+            </Button>
+          </FormControl>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0">
+          <Command>
+            <CommandInput
+              placeholder="Search heroes..."
+              onChange={(e) => {
+                const query = e.target.value.toLowerCase();
+                const filteredHeroes = HeroNames.filter((hero) =>
+                  hero.toLowerCase().includes(query)
+                );
+                // Directly handle filtering heroes in the list
+                setFilteredHeroes(filteredHeroes);  // update this to handle filtered list directly
+              }}
+            />
+            <CommandList>
+              <CommandEmpty>No heroes found.</CommandEmpty>
+              <CommandGroup>
+                {/* Display filtered heroes */}
+                {filteredHeroes.length > 0 ? (
+                  filteredHeroes.map((hero) => (
+                    <CommandItem
+                      key={hero}
+                      value={hero}
+                      onSelect={() => handleSelectHero(hero)}
+                    >
+                      {hero.replace("Hero_", "").replace(".png", "")}
+                    </CommandItem>
+                  ))
+                ) : (
+                  <CommandItem disabled>No matching heroes</CommandItem>
+                )}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      {/* Display selected heroes */}
+      {field.value && field.value.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {field.value.map((hero: string) => (
+            <span
+              key={hero}
+              className="inline-flex items-center bg-gray-200 rounded-full px-3 py-1 text-sm text-gray-700"
+            >
+              {hero.replace("Hero_", "").replace(".png", "")}
+              <button
+                className="ml-2 text-red-500"
+                onClick={() => handleRemoveHero(hero)}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
+<FormField
+  control={form.control}
+  name="bannedArtefacts"
+  render={({ field }) => (
+    <FormItem className="flex flex-col">
+      <FormLabel>Select Banned Artefacts (Optional)</FormLabel>
+      <Popover>
+        <PopoverTrigger asChild>
+          <FormControl>
+            <Button
+              variant="outline"
+              className="w-[200px] justify-between"
+              role="combobox"
+            >
+              {field.value && field.value.length > 0
+                ? `${field.value.length} artefact${field.value.length > 1 ? "s" : ""} selected`
+                : "Select artefacts"}
+            </Button>
+          </FormControl>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0">
+          <Command>
+            <CommandInput
+              placeholder="Search artefacts..."
+              onChange={(e) => {
+                const query = e.target.value.toLowerCase();
+                const filtered = ArtefactNames.filter((artefact) =>
+                  artefact.toLowerCase().includes(query)
+                );
+                setFilteredArtefacts(filtered);
+              }}
+            />
+            <CommandList>
+              <CommandEmpty>No artefacts found.</CommandEmpty>
+              <CommandGroup>
+                {filteredArtefacts.length > 0 ? (
+                  filteredArtefacts.map((artefact) => (
+                    <CommandItem
+                      key={artefact}
+                      value={artefact}
+                      onSelect={() => handleSelectArtefact(artefact)}
+                    >
+                      {artefact.replace("Artifact_", "").replace(".gif", "")}
+                    </CommandItem>
+                  ))
+                ) : (
+                  <CommandItem disabled>No matching artefacts</CommandItem>
+                )}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      {/* Display selected artefacts */}
+      {field.value && field.value.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {field.value.map((artefact: string) => (
+            <span
+              key={artefact}
+              className="inline-flex items-center bg-gray-200 rounded-full px-3 py-1 text-sm text-gray-700"
+            >
+              {artefact.replace("Artifact_", "").replace(".gif", "")}
+              <button
+                className="ml-2 text-red-500"
+                onClick={() => handleRemoveArtefact(artefact)}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
+
+
+
+
+<FormField
+  control={form.control}
+  name="bannedSpells"
+  render={({ field }) => (
+    <FormItem className="flex flex-col">
+      <FormLabel>Select Banned Spells (Optional)</FormLabel>
+      <Popover>
+        <PopoverTrigger asChild>
+          <FormControl>
+            <Button
+              variant="outline"
+              className="w-[200px] justify-between"
+              role="combobox"
+            >
+              {field.value && field.value.length > 0
+                ? `${field.value.length} spell${field.value.length > 1 ? "s" : ""} selected`
+                : "Select spells"}
+            </Button>
+          </FormControl>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0">
+          <Command>
+            <CommandInput
+              placeholder="Search spells..."
+              onChange={(e) => {
+                const query = e.target.value.toLowerCase();
+                const filteredSpells = SpellNames.filter((spell) =>
+                  spell.toLowerCase().includes(query)
+                );
+                // Directly handle filtering spells in the list
+                setFilteredSpells(filteredSpells);  // update this to handle filtered list directly
+              }}
+            />
+            <CommandList>
+              <CommandEmpty>No spells found.</CommandEmpty>
+              <CommandGroup>
+                {/* Display filtered spells */}
+                {filteredSpells.length > 0 ? (
+                  filteredSpells.map((spell) => (
+                    <CommandItem
+                      key={spell}
+                      value={spell}
+                      onSelect={() => handleSelectSpell(spell)}
+                    >
+                      {spell.replace("Spell_", "").replace(".png", "")}
+                    </CommandItem>
+                  ))
+                ) : (
+                  <CommandItem disabled>No matching spells</CommandItem>
+                )}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      {/* Display selected spells */}
+      {field.value && field.value.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {field.value.map((spell: string) => (
+            <span
+              key={spell}
+              className="inline-flex items-center bg-gray-200 rounded-full px-3 py-1 text-sm text-gray-700"
+            >
+              {spell.replace("Spell_", "").replace(".png", "")}
+              <button
+                className="ml-2 text-red-500"
+                onClick={() => handleRemoveSpell(spell)}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         <FormField

@@ -18,21 +18,24 @@ interface Params {
     changelog: string | undefined;
     changelogLink: string | undefined;
     category: string;
+    bannedHeroes: string[] | undefined;
+    bannedSpells: string[] | undefined;
+    bannedArtefacts: string[] | undefined;
     path: string;
 }
 
 
 
-export async function createTemplate({ title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category, path }: Params) {
+export async function createTemplate({ title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category, bannedHeroes, bannedSpells, bannedArtefacts, path }: Params) {
     // const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
     if(!canManage) return null
     try {
         await pool.query(
-            `INSERT INTO h3_szablony.templates (title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
-            [title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category]
+            `INSERT INTO h3_szablony.templates (title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category, banned_heroes, banned_spells)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+            [title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category, bannedHeroes, bannedSpells, bannedArtefacts]
         );
         revalidatePath(path);
     } catch (error) {
@@ -40,7 +43,7 @@ export async function createTemplate({ title, image, description, settings, down
     }
 }
 
-export async function editTemplate({ id, title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category, path }: Params) {
+export async function editTemplate({ id, title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category, bannedHeroes, bannedSpells, bannedArtefacts, path }: Params) {
     // const pool = await db.connect()
     const { has } = auth();
     const canManage = has({permission:"org:mod:change"});
@@ -48,9 +51,9 @@ export async function editTemplate({ id, title, image, description, settings, do
     try {
         await pool.query(
             `UPDATE h3_szablony.templates 
-             SET title = $2, image = $3, description = $4, settings = $5, download = $6, trade = $7, rules = $8, specification = $9, specificationLink = $10, changelog = $11, changelogLink = $12, category = $13
+             SET title = $2, image = $3, description = $4, settings = $5, download = $6, trade = $7, rules = $8, specification = $9, specificationLink = $10, changelog = $11, changelogLink = $12, category = $13, banned_heroes = $14, banned_spells = $15, banned_artefacts = $16
              WHERE id = $1`,
-            [id, title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category]
+            [id, title, image, description, settings, download, trade, rules, specification, specificationLink, changelog, changelogLink, category, bannedHeroes, bannedSpells, bannedArtefacts]
         );
         revalidatePath(path);
     } catch (error) {
@@ -87,6 +90,7 @@ export async function fetchTemplateById(template_id) {
         const templateQuery = `SELECT * FROM h3_szablony.templates WHERE id = $1`;
         const templateResult = await pool.query(templateQuery, [template_id]);
         const template = templateResult.rows[0];
+        
 
         if (!template) {
             throw new Error(`Template with ID ${template_id} not found`);
@@ -96,7 +100,18 @@ export async function fetchTemplateById(template_id) {
         const templateVersionsResult = await pool.query(templateVersionsQuery, [template_id]);
         const templateVersions = templateVersionsResult.rows;
 
-        return {template, templateVersions}
+        const bannedHeroesQuery = `SELECT id, name FROM h3_szablony.heroes WHERE name = ANY($1)`
+        const bannedHeroesResult = await pool.query(bannedHeroesQuery, [template.banned_heroes]);
+        const bannedHeroesList = bannedHeroesResult.rows
+
+        const bannedSpellsQuery = `SELECT id, name FROM h3_szablony.spells WHERE name = ANY($1)`
+        const bannedSpellsResult = await pool.query(bannedSpellsQuery, [template.banned_spells]);
+        const bannedSpellsList = bannedSpellsResult.rows
+
+        const bannedArtefactsQuery = `SELECT id, name FROM h3_szablony.artefacts WHERE name = ANY($1)`
+        const bannedArtefactsResult = await pool.query(bannedArtefactsQuery, [template.banned_artefacts]);
+        const bannedArtefactsList = bannedArtefactsResult.rows
+        return {template, templateVersions, bannedHeroesList, bannedSpellsList, bannedArtefactsList}
     } catch (error) {
         throw new Error(`Failed to fetch template: ${error.message}`);
     }

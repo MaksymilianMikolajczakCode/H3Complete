@@ -14,4 +14,7 @@ export const TemplateValidation = z.object({
   changelog: z.string().optional(),
   changelogLink: z.string().optional(),
   category: z.string(),
+  bannedHeroes: z.array(z.string()).optional(),
+  bannedSpells: z.array(z.string()).optional(),
+  bannedArtefacts: z.array(z.string()).optional(),
 });

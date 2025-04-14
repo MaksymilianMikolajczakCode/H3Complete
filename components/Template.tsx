@@ -32,7 +32,10 @@ interface Props {
       changes: string,
       specificationLink: string | undefined
       //creator: string | undefined,
-    }]
+    }],
+    bannedHeroes: []
+    bannedSpells: []
+    bannedArtefacts: []
   }
 function Template({
   id,
@@ -48,12 +51,15 @@ function Template({
   versions,
   specificationLink,
   changelog,
-  changelogLink
+  changelogLink,
+  bannedHeroes,
+  bannedSpells,
+  bannedArtefacts
 }: Props) {
   const router = useRouter();
   const { has } = useAuth();
   const canManageSettings = has({ permission: "org:mod:change" });
-
+  console.log(bannedHeroes)
   const [activeWindow, setActiveWindow] = useState("start");
   const handleSelectChange = (value: string) => {
     setActiveWindow(value);
@@ -63,12 +69,14 @@ function Template({
   <div className="flex w-full md:w-auto mr-5">
     {activeWindow === "start" && (
       <div className="w-full">
+        
         <div className="mt-12 flex flex-col md:flex-row justify-between">
           <span className="font-bold text-2xl whitespace-nowrap sm:whitespace-normal mb-2 md:mb-0">
             {title.length > 40 ? `${title.slice(0, 40)}...` : title}
           </span>
           <div className="flex items-center text-black">
             <div className="mr-2 overflow-x-hidden">
+            <h2 className='text-white'>Wersje Szablonu</h2>
               <Select onValueChange={handleSelectChange}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder={title} />
@@ -91,7 +99,7 @@ function Template({
             
           </div>
         </div>
-        <div className="text-sky-500 mt-2 mb-2 font-semibold">
+        <div className="text-sky-500 mb-2 font-semibold">
           {download ? (
             <Link href={download}>
               Pobierz  {title}
@@ -104,6 +112,15 @@ function Template({
           <h2 className="font-semibold text-lg whitespace-pre-line mb-2">Opis</h2>
           {description}
         </div>
+        {specificationLink?.length > 9 ? (
+    <div className="text-sky-500 mt-2 mb-2 font-semibold">
+      <Link href={specificationLink}>
+        Link do pełnej specyfikacji {title}
+      </Link>
+    </div>
+  ) : (
+    <span></span>
+  )}
         <div className="mt-1 whitespace-pre-line">
           <h2 className="font-semibold text-lg mb-2">Ustawienia</h2>
           <div className="prose max-w-screen-2xl text-white"><div dangerouslySetInnerHTML={{ __html: settings }} /></div>
@@ -151,30 +168,115 @@ function Template({
       </Dialog>
     </div>
 
+    {bannedHeroes.length > 0 && (
+    <div>
+  <h2 className="font-semibold text-lg mb-4">Zbanowani Bohaterowie</h2>
+  <div
+    style={{
+      display: 'flex',
+      gap: '1rem',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+    }}
+  >
+    {bannedHeroes.map((hero, index) => (
+      <div key={index} style={{ textAlign: 'center' }}>
+        <a
+          href={`https://drive.google.com/file/d/${hero.id}/view`}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={hero.name?.replace("Hero_", "").replace(".png", "") || "Hero"}
+        >
+          <Image
+            src={`https://drive.google.com/uc?id=${hero.id}`}
+            alt={hero.name || 'Hero Image'}
+            width={60}
+            height={60}
+            style={{ borderRadius: '8px' }}
+          />
+        </a>
+      </div>
+    ))}
+  </div>
+</div>)}
 
+{bannedSpells.length > 0 && (
+<div>
+  <h2 className="font-semibold text-lg mb-4 mt-2">Zbanowane Zaklęcia</h2>
+  <div
+    style={{
+      display: 'flex',
+      gap: '1rem',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+    }}
+  >
+    {bannedSpells.map((spell, index) => (
+      <div key={index} style={{ textAlign: 'center' }}>
+        <a
+          href={`https://drive.google.com/file/d/${spell.id}/view`}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={spell.name?.replace("Spell_", "").replace(".png", "") || "Spell"}
+        >
+          <Image
+            src={`https://drive.google.com/uc?id=${spell.id}`}
+            alt={spell.name || 'Spell Image'}
+            width={75}
+            height={75}
+            style={{ borderRadius: '8px' }}
+          />
+        </a>
+      </div>
+    ))}
+  </div>
+</div>)}
+
+{bannedArtefacts.length > 0 && (
+<div>
+  <h2 className="font-semibold text-lg mb-4 mt-2">Zbanowane Artefakty</h2>
+  <div
+    style={{
+      display: 'flex',
+      gap: '1rem',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+    }}
+  >
+    {bannedArtefacts.map((artefact, index) => (
+      <div key={index} style={{ textAlign: 'center' }}>
+        <a
+          href={`https://drive.google.com/file/d/${artefact.id}/view`}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={artefact.name?.replace("Artifact_", "").replace(".gif", "") || "Artifact"}
+        >
+          <Image
+            src={`https://drive.google.com/uc?id=${artefact.id}`}
+            alt={artefact.name || 'Artifact Image'}
+            width={50}
+            height={50}
+            style={{ borderRadius: '8px' }}
+          />
+        </a>
+      </div>
+    ))}
+  </div>
+</div>)}
 
         <div className="whitespace-pre-line mt-2 mb-2">
           <h2 className="font-semibold text-lg mb-2">Specyfikacja</h2>
           <div className="prose max-w-screen-2xl text-white"><div dangerouslySetInnerHTML={{ __html: specification }} /></div>
         </div>
         <div>
-  {specificationLink?.length > 9 ? (
-    <div className="text-sky-500 mt-2 mb-2 font-semibold">
-      <Link href={specificationLink}>
-        Link do pełnej specyfikacji {title}
-      </Link>
-    </div>
-  ) : (
-    <span></span>
-  )}
 </div>
 {changelog?.length > 9 || changelogLink?.length > 9 ? <div className="whitespace-pre-line mt-2 mb-2">
           <h2 className="font-semibold text-lg mb-2">Changelog</h2>
           <div className="prose max-w-screen-2xl text-white"><div dangerouslySetInnerHTML={{ __html: changelog }} /></div>
           {changelogLink?.length > 9 ? (
     <div className="text-sky-500 mt-2 mb-2 font-semibold">
-      <Link href={specificationLink}>
-       Pełny Changelog
+      <Link href={changelogLink}>
+       Link do Changeloga
       </Link>
     </div>
   ) : (

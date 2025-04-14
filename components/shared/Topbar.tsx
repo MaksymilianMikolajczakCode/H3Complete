@@ -20,7 +20,7 @@ import { IoMdPerson } from "react-icons/io";
 <path fill="#CBCBCB" d="M3 6h18v2.016H3V6zm0 6.984v-1.969h18v1.969H3zM3 18v-2.016h18V18H3z"/>
 </svg>
     </span>
-    <span className='m-auto pr-5 '>Jaskinia Behemota</span></div>
+    <span className='m-auto pr-5'><a href='https://heroes.net.pl/'>Jaskinia Behemota</a></span></div>
   <div className="dropdown-content w-[100vw] lg:w-[1000px]">
     <div className='grid grid-cols-2 lg:grid-cols-4'>
     {NavLinks.map(({ key, text, subLinks }) => (
